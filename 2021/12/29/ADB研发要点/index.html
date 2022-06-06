@@ -16,21 +16,21 @@
   <meta name="author" content="wangcw">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+    <meta name="description" content="基础相关数据类型1.支持JSON、POINT空间类型字段； 2.定义时可不带长度； 3.数据类型介绍详见：https:&#x2F;&#x2F;help.aliyun.com&#x2F;document_detail&#x2F;123577.html SQL语句差异1.DDL&#x2F;DML&#x2F;DQL&#x2F;DCL语句支持程度 2.不支持项：不支持函数、过程 3.官方介绍： https:&#x2F;&#x2F;help.aliyun.com&#x2F;d">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://blog.wongcw.cn/2022/06/06/hello-world/index.html">
+<meta property="og:title" content="存伟博客">
+<meta property="og:url" content="https://blog.wongcw.cn/2021/12/29/ADB%E7%A0%94%E5%8F%91%E8%A6%81%E7%82%B9/index.html">
 <meta property="og:site_name" content="存伟博客">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="基础相关数据类型1.支持JSON、POINT空间类型字段； 2.定义时可不带长度； 3.数据类型介绍详见：https:&#x2F;&#x2F;help.aliyun.com&#x2F;document_detail&#x2F;123577.html SQL语句差异1.DDL&#x2F;DML&#x2F;DQL&#x2F;DCL语句支持程度 2.不支持项：不支持函数、过程 3.官方介绍： https:&#x2F;&#x2F;help.aliyun.com&#x2F;d">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-06-06T13:48:27.714Z">
-<meta property="article:modified_time" content="2022-06-06T13:48:27.714Z">
+<meta property="article:published_time" content="2021-12-29T08:12:16.476Z">
+<meta property="article:modified_time" content="2021-12-29T08:12:16.476Z">
 <meta property="article:author" content="wangcw">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Hello World - 存伟博客</title>
+  <title>存伟博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -193,7 +193,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -204,8 +204,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-06 21:48" pubdate>
-          2022年6月6日 晚上
+        <time datetime="2021-12-29 16:12" pubdate>
+          2021年12月29日 下午
         </time>
       </span>
     
@@ -216,7 +216,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          367 字
+          624 字
         
       </span>
     
@@ -227,7 +227,7 @@
         
         
         
-          4 分钟
+          6 分钟
         
       </span>
     
@@ -265,23 +265,30 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none"></h1>
             
             <div class="markdown-body">
               
-              <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+              <h1 id="基础相关"><a href="#基础相关" class="headerlink" title="基础相关"></a>基础相关</h1><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>1.支持JSON、POINT空间类型字段；</p>
+<p>2.定义时可不带长度；</p>
+<p>3.数据类型介绍详见：<a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/123577.html">https://help.aliyun.com/document_detail/123577.html</a></p>
+<h2 id="SQL语句差异"><a href="#SQL语句差异" class="headerlink" title="SQL语句差异"></a>SQL语句差异</h2><p>1.DDL&#x2F;DML&#x2F;DQL&#x2F;DCL语句支持程度</p>
+<p>2.不支持项：不支持函数、过程</p>
+<p>3.官方介绍： <a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/197270.html">https://help.aliyun.com/document_detail/197270.html</a></p>
+<h2 id="系统函数"><a href="#系统函数" class="headerlink" title="系统函数"></a>系统函数</h2><p>1.各函数与MySQL对比，支持度、兼容性对比。</p>
+<p>2.官方介绍：<a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/197391.html">https://help.aliyun.com/document_detail/197391.html</a></p>
+<h2 id="可编程性替代方案"><a href="#可编程性替代方案" class="headerlink" title="可编程性替代方案"></a>可编程性替代方案</h2><p>1.DMS数仓开发;</p>
+<p>2.DataWorks开发（舍弃）;</p>
+<p>3.DMS数仓开发暂无介绍，后期补充开发要点。</p>
+<h2 id="优化要点"><a href="#优化要点" class="headerlink" title="优化要点"></a>优化要点</h2><h3 id="建表前提"><a href="#建表前提" class="headerlink" title="建表前提"></a>建表前提</h3><p>1.选好分布键，最佳选择为参与JOIN的分区键而非主键或自增主键; DISTRIBUTED BY HASH(column_name,…)</p>
+<p>2.分区键，PARTITION BY {VALUE(column_name) | VALUE(date_format(column_name, ?)}</p>
+<p>3.COUNT 出来得字段必须用 BIGINT存储</p>
+<p>4.数据类型区别 不带长度</p>
+<h3 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h3><p>1.主键自增不会报错！！！</p>
+<p>2.JOIN 子查询内尽量较少数据行数</p>
+<p>3.中间层定时全量刷新，可使用物化视图</p>
+<p>4.严谨SELECT *</p>
+<p>5.分布键必须包含在主键定义内</p>
 
               
             </div>
@@ -298,8 +305,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>https://blog.wongcw.cn/2022/06/06/hello-world/</div>
+      <div></div>
+      <div>https://blog.wongcw.cn/2021/12/29/ADB研发要点/</div>
     </div>
     <div class="license-meta">
       
@@ -311,7 +318,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月6日</div>
+          <div>2021年12月29日</div>
         </div>
       
       
@@ -341,9 +348,21 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2022/05/13/DataHub%E5%AE%89%E8%A3%85/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2021/12/29/ADB%E8%A1%A8%E5%88%9B%E5%BB%BA%E5%8F%82%E6%95%B0%E7%9B%B8%E5%85%B3%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
