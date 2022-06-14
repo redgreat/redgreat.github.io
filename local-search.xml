@@ -57,8 +57,8 @@
   
   <entry>
     <title></title>
-    <link href="/2022/05/19/apache%20alats%E9%83%A8%E7%BD%B2/"/>
-    <url>/2022/05/19/apache%20alats%E9%83%A8%E7%BD%B2/</url>
+    <link href="/2022/05/19/Apache-Alats%E9%83%A8%E7%BD%B2/"/>
+    <url>/2022/05/19/Apache-Alats%E9%83%A8%E7%BD%B2/</url>
     
     <content type="html"><![CDATA[<h1 id="产品介绍"><a href="#产品介绍" class="headerlink" title="产品介绍"></a>产品介绍</h1><h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><h1 id="部署方案"><a href="#部署方案" class="headerlink" title="部署方案"></a>部署方案</h1><p>系统版本</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">uname -a<br>Linux iZbp1e4qug6kl2vcvhr5f2Z 4.18.0-348.7.1.el8_5.x86_64 #1 SMP Wed Dec 22 13:25:12 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux<br></code></pre></td></tr></table></figure><p>依赖包安装</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum -y install maven<br></code></pre></td></tr></table></figure><p>#使用指南(着重案例介绍,基础类知识可直接附带链接)</p><p>#FAQ</p>]]></content>
     
