@@ -1,0 +1,1095 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="wangcw">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="应用1 壹好车服定位数据新增专用账号123ALTER USER root PASS &amp;#x27;Lunz2017&amp;#x27;;CREATE USER user_service PASS &amp;#x27;Lunz2017&amp;#x27;;ALTER USER user_service PRIVILEGE write;  建库1CREATE DATABASE IF NOT EXISTS locationcen">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TDEngine应用测试">
+<meta property="og:url" content="https://blog.wongcw.cn/2022/06/02/TDEngine%E5%BA%94%E7%94%A8%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:site_name" content="blogwong">
+<meta property="og:description" content="应用1 壹好车服定位数据新增专用账号123ALTER USER root PASS &amp;#x27;Lunz2017&amp;#x27;;CREATE USER user_service PASS &amp;#x27;Lunz2017&amp;#x27;;ALTER USER user_service PRIVILEGE write;  建库1CREATE DATABASE IF NOT EXISTS locationcen">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-02T09:23:11.000Z">
+<meta property="article:modified_time" content="2022-06-14T15:39:55.264Z">
+<meta property="article:author" content="wangcw">
+<meta property="article:tag" content="TDEngine">
+<meta property="article:tag" content="时序数据库">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>TDEngine应用测试 - blogwong</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.wongcw.cn","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"663d1a6ec35b55e9fe6afb524ef4adaf","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>blogwong</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="TDEngine应用测试"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-02 17:23" pubdate>
+          2022年6月2日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          106 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">TDEngine应用测试</h1>
+            
+            <div class="markdown-body">
+              
+              <h2 id="应用1-壹好车服定位数据"><a href="#应用1-壹好车服定位数据" class="headerlink" title="应用1 壹好车服定位数据"></a>应用1 壹好车服定位数据</h2><h4 id="新增专用账号"><a href="#新增专用账号" class="headerlink" title="新增专用账号"></a>新增专用账号</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">USER</span> root PASS <span class="hljs-string">&#x27;Lunz2017&#x27;</span>;<br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">USER</span> user_service PASS <span class="hljs-string">&#x27;Lunz2017&#x27;</span>;<br><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">USER</span> user_service PRIVILEGE write;<br></code></pre></td></tr></table></figure>
+
+<h4 id="建库"><a href="#建库" class="headerlink" title="建库"></a>建库</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> locationcenter <span class="hljs-keyword">UPDATE</span> <span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
+
+<p>参数解析</p>
+<blockquote>
+<h5 id="INFO"><a href="#INFO" class="headerlink" title="INFO"></a>INFO</h5><ol>
+<li><p>KEEP 是该数据库的数据保留多长天数，缺省是 3650 天(10 年)，数据库会自动删除超过时限的数据；</p>
+</li>
+<li><p>UPDATE 标志数据库支持更新相同时间戳数据；（从 2.1.7.0 版本开始此参数支持设为 2，表示允许部分列更新，也即更新数据行时未被设置的列会保留原值。）（从 2.0.8.0 版本开始支持此参数。注意此参数不能通过<code>ALTER DATABASE</code>指令进行修改。）</p>
+<ol>
+<li>UPDATE 设为 0 时，表示不允许更新数据，后发送的相同时间戳的数据会被直接丢弃；</li>
+<li>UPDATE 设为 1 时，表示更新全部列数据，即如果更新一个数据行，其中某些列没有提供取值，那么这些列会被设为 NULL；</li>
+<li>UPDATE 设为 2 时，表示支持更新部分列数据，即如果更新一个数据行，其中某些列没有提供取值，那么这些列会保持原有数据行中的对应值；</li>
+<li>更多关于 UPDATE 参数的用法，请参考<a target="_blank" rel="noopener" href="https://docs.taosdata.com/train-faq/faq">FAQ</a>。</li>
+</ol>
+</li>
+<li><p>数据库名最大长度为 33；</p>
+</li>
+<li><p>一条 SQL 语句的最大长度为 65480 个字符；</p>
+</li>
+<li><p>创建数据库时可用的参数有：</p>
+<ul>
+<li>cache: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#cache">详细说明</a></li>
+<li>blocks: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#blocks">详细说明</a></li>
+<li>days: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#days">详细说明</a></li>
+<li>keep: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#keep">详细说明</a></li>
+<li>minRows: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#minrows">详细说明</a></li>
+<li>maxRows: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#maxrows">详细说明</a></li>
+<li>wal: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#wallevel">详细说明</a></li>
+<li>fsync: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#fsync">详细说明</a></li>
+<li>update: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#update">详细说明</a></li>
+<li>cacheLast: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#cachelast">详细说明</a></li>
+<li>replica: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#replica">详细说明</a></li>
+<li>quorum: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#quorum">详细说明</a></li>
+<li>maxVgroupsPerDb: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#maxvgroupsperdb">详细说明</a></li>
+<li>comp: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#comp">详细说明</a></li>
+<li>precision: <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/#precision">详细说明</a></li>
+</ul>
+</li>
+<li><p>请注意上面列出的所有参数都可以配置在配置文件 <code>taosd.cfg</code> 中作为创建数据库时使用的默认配置， <code>create database</code> 的参数中明确指定的会覆盖配置文件中的设置。</p>
+</li>
+</ol>
+</blockquote>
+<p>显示当前参数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> VARIABLES;<br></code></pre></td></tr></table></figure>
+
+<p>设置压缩值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> DATABASE locationcenter COMP <span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>COMP 参数是指修改数据库文件压缩标志位，缺省值为 2，取值范围为 [0, 2]。0 表示不压缩，1 表示一阶段压缩，2 表示两阶段压缩。</p>
+</blockquote>
+<p>设置副本数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> DATABASE locationcenter REPLICA <span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>REPLICA 参数是指修改数据库副本数，取值范围 [1, 3]。在集群中使用，副本数必须小于或等于 DNODE 的数目。</p>
+</blockquote>
+<p>设置保留天数参数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> DATABASE locationcenter KEEP <span class="hljs-number">365000</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>KEEP 参数是指修改数据文件保存的天数，缺省值为 3650，取值范围 [days, 365000]，必须大于或等于 days 参数值。查看参数时有的话默认就行</p>
+</blockquote>
+<p>设置块大小</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> DATABASE locationcenter BLOCKS <span class="hljs-number">100</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>BLOCKS 参数是每个 VNODE (TSDB) 中有多少 cache 大小的内存块，因此一个 VNODE 的用的内存大小粗略为（cache * blocks）。取值范围 [3, 1000]。</p>
+</blockquote>
+<p>设置确认数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> DATABASE locationcenter QUORUM <span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>QUORUM 参数是指数据写入成功所需要的确认数，取值范围 [1, 2]。对于异步复制，quorum 设为 1，具有 master 角色的虚拟节点自己确认即可。对于同步复制，quorum 设为 2。原则上，Quorum &gt;&#x3D; 1 并且 Quorum &lt;&#x3D; replica(副本数)，这个参数在启动一个同步模块实例时需要提供。</p>
+</blockquote>
+<p>设置缓存</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> DATABASE locationcenter CACHELAST <span class="hljs-number">3</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>CACHELAST 参数控制是否在内存中缓存子表的最近数据。缺省值为 0，取值范围 [0, 1, 2, 3]。其中 0 表示不缓存，1 表示缓存子表最近一行数据，2 表示缓存子表每一列的最近的非 NULL 值，3 表示同时打开缓存最近行和列功能。（从 2.0.11.0 版本开始支持参数值 [0, 1]，从 2.1.2.0 版本开始支持参数值 [0, 1, 2, 3]。）<br>说明：缓存最近行，将显著改善 LAST_ROW 函数的性能表现；缓存每列的最近非 NULL 值，将显著改善无特殊影响（WHERE、ORDER BY、GROUP BY、INTERVAL）下的 LAST 函数的性能表现。</p>
+</blockquote>
+<p>显示所有数据库及设置参数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> DATABASES;<br><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">CREATE</span> DATABASE locationcenter\G;<br></code></pre></td></tr></table></figure>
+
+<p>服务器参数优化参考 <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/config/">https://docs.taosdata.com/reference/config/</a></p>
+<h3 id="建表"><a href="#建表" class="headerlink" title="建表"></a>建表</h3><p>实际场景解释：创建超级表，为模板表，根据实际业务，壹号车服app使用人员3000-4000人，数据写入时根据人员登录Code分不同子表存储数据，这样取数据时会每个人只从一个单子表里取值，且数据库参数CACHELAST设置为3后，每个人最新一次定位直接从缓存获取，大大加快查询速度。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs sql">USE `locationcenter`;<br><span class="hljs-keyword">DROP</span> STABLE IF <span class="hljs-keyword">EXISTS</span> `userlocation`;<br><span class="hljs-keyword">CREATE</span> STABLE `userlocation` <br>(`locationtime` <span class="hljs-type">TIMESTAMP</span>,<br> `lat` <span class="hljs-keyword">DOUBLE</span>,<br> `lng` <span class="hljs-keyword">DOUBLE</span>,<br> `speed` <span class="hljs-keyword">DOUBLE</span>,<br> `address` <span class="hljs-type">NCHAR</span>(<span class="hljs-number">200</span>)) <br> TAGS (`loginname` <span class="hljs-type">NCHAR</span>(<span class="hljs-number">50</span>),<br>       `username` <span class="hljs-type">NCHAR</span>(<span class="hljs-number">50</span>),<br>       `deviceimei` <span class="hljs-type">NCHAR</span>(<span class="hljs-number">50</span>),<br>       `devicemodel` <span class="hljs-type">NCHAR</span>(<span class="hljs-number">100</span>),<br>       `devicetype` BOOL);<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>说明</p>
+<ol>
+<li>表的第一个字段必须是 TIMESTAMP，并且系统自动将其设为主键；</li>
+<li>表名最大长度为 192；</li>
+<li>表的每行长度不能超过 48KB;（注意：每个 BINARY&#x2F;NCHAR 类型的列还会额外占用 2 个字节的存储位置）；</li>
+<li>子表名只能由字母、数字和下划线组成，且不能以数字开头，不区分大小写；</li>
+<li>使用数据类型 binary 或 nchar，需指定其最长的字节数，如 binary(20)，表示 20 字节；</li>
+<li>为了兼容支持更多形式的表名，TDengine 引入新的转义符 “<code>&quot;，可以让表名与关键词不冲突，同时不受限于上述表名称合法性约束检查。但是同样具有长度限制要求。使用转义字符以后，不再对转义字符中的内容进行大小写统一。 例如：</code>aBc<code>和</code>abc&#96; 是不同的表名，但是 abc 和 aBc 是相同的表名。 需要注意的是转义字符中的内容必须是可打印字符。 上述的操作逻辑和约束要求与 MySQL 数据的操作一致。 从 2.3.0.0 版本开始支持这种方式；</li>
+<li>数据迁移注意保障列长足够，表的第一个字段可以使用UNIX_TIMESTAMP格式写入，根据库的时间经度自动转换；</li>
+<li>TAGS 列的数据类型不能是 timestamp 类型；（从 2.1.3.0 版本开始，TAGS 列中支持使用 timestamp 类型，但需注意在 TAGS 中的 timestamp 列写入数据时需要提供给定值，而暂不支持四则运算，例如 <code>NOW + 10s</code> 这类表达式）</li>
+<li>TAGS 列名不能与其他列名相同；</li>
+<li>TAGS 列名不能为预留关键字（参见：<a target="_blank" rel="noopener" href="https://docs.taosdata.com/taos-sql/keywords/">参数限制与保留关键字</a> 章节）；</li>
+<li>TAGS 最多允许 128 个，至少 1 个，总长度不超过 16 KB。</li>
+</ol>
+</blockquote>
+<p>支持的数据</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th><strong>类型</strong></th>
+<th><strong>Bytes</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>TIMESTAMP</td>
+<td>8</td>
+<td>时间戳。缺省精度毫秒，可支持微秒和纳秒。从格林威治时间 1970-01-01 00:00:00.000 (UTC&#x2F;GMT) 开始，计时不能早于该时间。（从 2.0.18.0 版本开始，已经去除了这一时间范围限制）（从 2.1.5.0 版本开始支持纳秒精度）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>INT</td>
+<td>4</td>
+<td>整型，范围 [-2^31+1, 2^31-1], -2^31 用作 NULL</td>
+</tr>
+<tr>
+<td>3</td>
+<td>BIGINT</td>
+<td>8</td>
+<td>长整型，范围 [-2^63+1, 2^63-1], -2^63 用作 NULL</td>
+</tr>
+<tr>
+<td>4</td>
+<td>FLOAT</td>
+<td>4</td>
+<td>浮点型，有效位数 6-7，范围 [-3.4E38, 3.4E38]</td>
+</tr>
+<tr>
+<td>5</td>
+<td>DOUBLE</td>
+<td>8</td>
+<td>双精度浮点型，有效位数 15-16，范围 [-1.7E308, 1.7E308]</td>
+</tr>
+<tr>
+<td>6</td>
+<td>BINARY</td>
+<td>自定义</td>
+<td>记录单字节字符串，建议只用于处理 ASCII 可见字符，中文等多字节字符需使用 nchar。理论上，最长可以有 16374 字节。binary 仅支持字符串输入，字符串两端需使用单引号引用。使用时须指定大小，如 binary(20) 定义了最长为 20 个单字节字符的字符串，每个字符占 1 byte 的存储空间，总共固定占用 20 bytes 的空间，此时如果用户字符串超出 20 字节将会报错。对于字符串内的单引号，可以用转义字符反斜线加单引号来表示，即 <code>\’</code>。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>SMALLINT</td>
+<td>2</td>
+<td>短整型， 范围 [-32767, 32767], -32768 用作 NULL</td>
+</tr>
+<tr>
+<td>8</td>
+<td>TINYINT</td>
+<td>1</td>
+<td>单字节整型，范围 [-127, 127], -128 用作 NULL</td>
+</tr>
+<tr>
+<td>9</td>
+<td>BOOL</td>
+<td>1</td>
+<td>布尔型，{true, false}</td>
+</tr>
+<tr>
+<td>10</td>
+<td>NCHAR</td>
+<td>自定义</td>
+<td>记录包含多字节字符在内的字符串，如中文字符。每个 nchar 字符占用 4 bytes 的存储空间。字符串两端使用单引号引用，字符串内的单引号需用转义字符 <code>\’</code>。nchar 使用时须指定字符串大小，类型为 nchar(10) 的列表示此列的字符串最多存储 10 个 nchar 字符，会固定占用 40 bytes 的空间。如果用户字符串长度超出声明长度，将会报错。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>JSON</td>
+<td></td>
+<td>json 数据类型， 只有 tag 可以是 json 格式</td>
+</tr>
+</tbody></table>
+<p>显示建表语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> userlocation\G;<br><span class="hljs-keyword">DESCRIBE</span> userlocation;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：查询超级表时对表描述词要改为 STABLE。</p>
+<p>例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> TABLES;<br><span class="hljs-keyword">SHOW</span> STABLES;<br><span class="hljs-keyword">DROP</span> STABLE XX;<br></code></pre></td></tr></table></figure>
+</blockquote>
+<p>表字段操作同MySQL，表标签相关管理：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sql">#修改子表标签<br><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> userlocation <span class="hljs-keyword">SET</span> TAG loginname<span class="hljs-operator">=</span>loginname;<br>#添加超级表标签<br><span class="hljs-keyword">ALTER</span> STABLE userlocation <span class="hljs-keyword">ADD</span> TAG testtag <span class="hljs-type">NCHAR</span>(<span class="hljs-number">50</span>);<br>#修改超级表标签名<br><span class="hljs-keyword">ALTER</span> STABLE userlocation CHANGE TAG testtag testtag1;<br>#修改超级表列宽<br><span class="hljs-keyword">ALTER</span> STABLE stb_name MODIFY TAG testtag1 <span class="hljs-type">NCHAR</span>(<span class="hljs-number">100</span>);<br>#删除超级表标签<br><span class="hljs-keyword">ALTER</span> STABLE userlocation <span class="hljs-keyword">DROP</span> TAG testtag1;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用 SELECT 语句可以完成在超级表上的投影及聚合两类查询，在 WHERE 语句中可以对标签及列进行筛选及过滤。</p>
+<p>如果在超级表查询语句中不加 ORDER BY, 返回顺序是先返回一个子表的所有数据，然后再返回下个子表的所有数据，所以返回的数据是无序的。如果增加了 ORDER BY 语句，会严格按 ORDER BY 语句指定的顺序返回的。</p>
+<p>除了更新标签的值的操作是针对子表进行，其他所有的标签操作（添加标签、删除标签等）均只能作用于 STable，不能对单个子表操作。对 STable 添加标签以后，依托于该 STable 建立的所有表将自动增加了一个标签，所有新增标签的默认值都是 NULL。</p>
+</blockquote>
+<h3 id="数据迁移"><a href="#数据迁移" class="headerlink" title="数据迁移"></a>数据迁移</h3><p>这里使用DATAX</p>
+<p>☆ DATAX工具包必需使用官方提供，不然会出各种依赖包问题</p>
+<p>亲测可用工具包下载地址：<a target="_blank" rel="noopener" href="https://cloud.189.cn/t/AVbmaqmUJRf2%EF%BC%88%E8%AE%BF%E9%97%AE%E7%A0%81%EF%BC%9Ae1jy%EF%BC%89">https://cloud.189.cn/t/AVbmaqmUJRf2（访问码：e1jy）</a></p>
+<p>安装 datax后，此文默认DATAX_HOME:&#x2F;opt&#x2F;datax</p>
+<p>迁移脚本放入 &#x2F;datax&#x2F;job文件夹内</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;job&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;content&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;reader&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mysqlreader&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;parameter&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>          <span class="hljs-attr">&quot;username&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;user_service&quot;</span><span class="hljs-punctuation">,</span><br>          <span class="hljs-attr">&quot;password&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Lunz2017&quot;</span><span class="hljs-punctuation">,</span><br>          <span class="hljs-attr">&quot;connection&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;querySql&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                  <span class="hljs-string">&quot;SELECT CONCAT(CONCAT(CONCAT(&#x27;t&#x27;,LoginName),&#x27;_&#x27;),DeviceIMEI) AS tbname,LocationTime,Lat,Lng,Speed,Address,LoginName,UserName,DeviceIMEI,DeviceModel,DeviceType FROM tb_userlocation WHERE LocationTime IS NOT NULL AND Lat IS NOT NULL AND Lng IS NOT NULL AND Speed IS NOT NULL AND Address IS NOT NULL AND LoginName IS NOT NULL AND UserName IS NOT NULLAND DeviceIMEI IS NOT NULL AND DeviceModel IS NOT NULL AND DeviceType IS NOT NULL;&quot;</span><br>                <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;jdbcUrl&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;jdbc:mysql://pc-bp1zip05gl1b1ga3veo.rwlb.rds.aliyuncs.com:3306/locationcenter&quot;</span><span class="hljs-punctuation">]</span><br>          <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">]</span><br>        <span class="hljs-punctuation">&#125;</span>     <br><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>       <span class="hljs-attr">&quot;writer&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>         <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;tdenginewriter&quot;</span><span class="hljs-punctuation">,</span><br>         <span class="hljs-attr">&quot;parameter&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>           <span class="hljs-attr">&quot;username&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;user_service&quot;</span><span class="hljs-punctuation">,</span><br>           <span class="hljs-attr">&quot;password&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Lunz2017&quot;</span><span class="hljs-punctuation">,</span><br>           <span class="hljs-attr">&quot;column&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>               <span class="hljs-string">&quot;tbname&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;locationtime&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;lat&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;lng&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;speed&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;address&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;loginname&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;username&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;deviceimei&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;devicemodel&quot;</span><span class="hljs-punctuation">,</span><br>               <span class="hljs-string">&quot;devicetype&quot;</span><br>             <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>           <span class="hljs-attr">&quot;connection&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>               <span class="hljs-punctuation">&#123;</span><br>                 <span class="hljs-attr">&quot;table&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                   <span class="hljs-string">&quot;userlocation&quot;</span><br>                 <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>                 <span class="hljs-attr">&quot;jdbcUrl&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;jdbc:TAOS-RS://192.168.200.99:6041/locationcenter&quot;</span><span class="hljs-punctuation">,</span><br>                 <span class="hljs-attr">&quot;jdbcUrl&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;jdbc:TAOS-RS://192.168.200.148:6041/locationcenter&quot;</span><br>               <span class="hljs-punctuation">&#125;</span><br>             <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>           <span class="hljs-attr">&quot;batchSize&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10000</span><span class="hljs-punctuation">,</span><br>           <span class="hljs-attr">&quot;ignoreTagsUnmatched&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><br>         <span class="hljs-punctuation">&#125;</span><br>      <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;setting&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;speed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;channel&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;byte&quot;</span> <span class="hljs-punctuation">:</span> <span class="hljs-number">5242880</span><br>      <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>执行迁移</p>
+<p>数据使用DATAX迁移，速度较慢</p>
+<p><strong>优化方式</strong></p>
+<p><em><strong>速度控制：</strong></em></p>
+<p>迁移 json脚本中直接设置</p>
+<table>
+<thead>
+<tr>
+<th>job.setting.speed.channel</th>
+<th>总并发数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>job.setting.speed.record</td>
+<td>总record限速</td>
+</tr>
+<tr>
+<td>job.setting.speed.byte</td>
+<td>总byte限速</td>
+</tr>
+<tr>
+<td>core.transport.channel.speed.record</td>
+<td>单个channel的record限速，默认值为10000（10000条&#x2F;s）</td>
+</tr>
+<tr>
+<td>core.transport.channel.speed.byte</td>
+<td>单个channel的byte限速，默认值1024*1024（1M&#x2F;s）</td>
+</tr>
+</tbody></table>
+<p><strong>注意事项：</strong></p>
+<ol>
+<li>若配置了总record限速，则必须配置单个channel的record限速</li>
+<li>若配置了总byte限速，则必须配置单个channe的byte限速</li>
+<li>若配置了总record限速和总byte限速，channel并发数参数就会失效。因为配置了总record限速和总byte限速之后，实际channel并发数是通过计算得到的：</li>
+</ol>
+<p><strong>计算公式为:</strong></p>
+<p>min(总byte限速&#x2F;单个channle的byte限速，总record限速&#x2F;单个channel的record限速)</p>
+<p>配置示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;core&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;transport&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;channel&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                <span class="hljs-attr">&quot;speed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                    <span class="hljs-attr">&quot;byte&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1048576</span> <span class="hljs-comment">//单个channel byte限速1M/s</span><br>                <span class="hljs-punctuation">&#125;</span><br>            <span class="hljs-punctuation">&#125;</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;job&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;setting&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;speed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                <span class="hljs-attr">&quot;byte&quot;</span> <span class="hljs-punctuation">:</span> <span class="hljs-number">5242880</span> <span class="hljs-comment">//总byte限速5M/s</span><br>            <span class="hljs-punctuation">&#125;</span><br>        <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>        ...<br>    <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p><em><strong>内存调整</strong></em></p>
+<p>当提升DataX Job内Channel并发数时，内存的占用会显著增加，因为DataX作为数据交换通道，在内存中会缓存较多的数据。例如Channel中会有一个Buffer，作为临时的数据交换的缓冲区，而在部分Reader和Writer的中，也会存在一些Buffer，为了防止OOM等错误，需调大JVM的堆内存。</p>
+<p> 调整JVM xms xmx参数的两种方式：一种是直接更改datax.py脚本；另一种是在启动的时候，加上对应的参数，如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">python /newdisk/soft/datax/bin/datax.py --jvm=&quot;-Xms6G -Xmx6G&quot; /newdisk/soft/datax/job/mysql2td_location.json<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>-Xms8G：运行的最小分配内存，如果可用内存不足5G，这个命令将不能被执行。</p>
+</li>
+<li><p>-Xmx8G：运行时最大占用内存大小。</p>
+</li>
+</ul>
+<p><em><strong>执行脚本</strong></em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">新建日志文档，记得定时清理，比较大</span><br>touch /opt/datax/log/mysql2td_location.log<br><span class="hljs-meta prompt_">#</span><span class="language-bash">后台执行迁移脚本，因数据量较大时间较久，为防止session断掉，后台运行</span><br>nohup python /opt/datax/bin/datax.py --jvm=&quot;-Xms5G -Xmx5G&quot; /opt/datax/job/mysql2td_location.json &gt;&gt; /opt/datax/log/mysql2td_location.log 2&gt;&amp;1 &amp;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看日志</span><br>tail -200f /opt/datax/log/mysql2td_location.log<br><span class="hljs-meta prompt_">#</span><span class="language-bash">日志太大了，不要日志</span><br>nohup python /newdisk/soft/datax/bin/datax.py --jvm=&quot;-Xms6G -Xmx6G&quot; /newdisk/soft/datax/job/mysql2td_location.json &gt;/dev/null 2&gt;log &amp;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">因为是后台运行 执行完毕需要杀掉进程</span><br>ps -ef|grep datax<br>kill pid<br></code></pre></td></tr></table></figure>
+
+<h3 id="应用数据"><a href="#应用数据" class="headerlink" title="应用数据"></a>应用数据</h3><blockquote>
+<p>测试数据：1.3亿条</p>
+<p>存储格式：超级表加单表</p>
+<p>服务器：双节点4C8G</p>
+</blockquote>
+<p>查询单人3天内所有定位点并按定位时间排序：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span><br><span class="hljs-keyword">FROM</span> userlocation <br><span class="hljs-keyword">WHERE</span> locationtime <span class="hljs-operator">&gt;</span> now<span class="hljs-number">-750</span>d <br><span class="hljs-keyword">AND</span> loginname<span class="hljs-operator">=</span><span class="hljs-string">&#x27;ZR18080096&#x27;</span><br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> locationtime <br>LIMIT <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>平均用时：Query OK, 10 row(s) in set (0.029506s)</p>
+</blockquote>
+<p>查询每个人最新一次定位</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">LAST</span>(<span class="hljs-operator">*</span>) <br><span class="hljs-keyword">FROM</span> userlocation <br><span class="hljs-keyword">WHERE</span> loginname<span class="hljs-operator">=</span><span class="hljs-string">&#x27;ZR18080096&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>平均用时：Query OK, 1 row(s) in set (0.004578s)</p>
+</blockquote>
+<h2 id="应用2-三方监控"><a href="#应用2-三方监控" class="headerlink" title="应用2 三方监控"></a>应用2 三方监控</h2><p>StatsD监控网络，collectd监控服务器硬件，配合garfna前台展示，均使用TDengine存储数据</p>
+<h3 id="安装grafana监控"><a href="#安装grafana监控" class="headerlink" title="安装grafana监控"></a>安装grafana监控</h3><p>安装包下载地址：<a target="_blank" rel="noopener" href="https://cloud.189.cn/t/7bUb2eBRfM7f%EF%BC%88%E8%AE%BF%E9%97%AE%E7%A0%81%EF%BC%9A4bdl%EF%BC%89">https://cloud.189.cn/t/7bUb2eBRfM7f（访问码：4bdl）</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo yum install grafana-8.5.3-1.x86_64.rpm<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看cli版本</span>  <br>grafana-cli -V<br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装td插件</span><br>sudo -u grafana grafana-cli \<br>  --pluginUrl https://github.com/taosdata/grafanaplugin/releases/download/v3.1.3/tdengine-datasource-3.1.3.zip \<br>  plugins install tdengine-datasource<br><span class="hljs-meta prompt_">#</span><span class="language-bash">编辑配置文件</span><br>/etc/grafana/grafana.ini<br>[plugins]<br>allow_loading_unsigned_plugins = tdengine-datasource<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启服务</span><br>sudo systemctl restart grafana-server<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果启动失败，就执行下这个</span><br>yum install polkit -y<br></code></pre></td></tr></table></figure>
+
+<p>配合TDinsight监控数据库<br>配置及监控项解释： <a target="_blank" rel="noopener" href="https://docs.taosdata.com/reference/tdinsight/">https://docs.taosdata.com/reference/tdinsight/</a><br>监控脚本下载地址（内网机器可能加载不了脚本，json格式上传）：<a target="_blank" rel="noopener" href="https://cloud.189.cn/t/nQrEJzAvmiYj%EF%BC%88%E8%AE%BF%E9%97%AE%E7%A0%81%EF%BC%9Ab3ea%EF%BC%89">https://cloud.189.cn/t/nQrEJzAvmiYj（访问码：b3ea）</a></p>
+<h3 id="StatsD安装"><a href="#StatsD安装" class="headerlink" title="StatsD安装"></a>StatsD安装</h3><p>下载安装包</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/statsd/statsd">https://github.com/statsd/statsd</a></p>
+<p>云：<a target="_blank" rel="noopener" href="https://cloud.189.cn/t/AFnEzuAfENVb%EF%BC%88%E8%AE%BF%E9%97%AE%E7%A0%81%EF%BC%9A9els%EF%BC%89">https://cloud.189.cn/t/AFnEzuAfENVb（访问码：9els）</a></p>
+<p>安装nodejs</p>
+<p><a target="_blank" rel="noopener" href="https://nodejs.org/en/download">https://nodejs.org/en/download</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">解压</span><br>xz -d node-xxxx.tar.xz<br>tar -xvf node-xxxx.tar<br><span class="hljs-meta prompt_">#</span><span class="language-bash">移动到文件夹</span><br>mv node-xxx /usr/local/node<br><span class="hljs-meta prompt_">#</span><span class="language-bash">建立软连接</span><br>ln -s /usr/local/node/bin/node /usr/bin/node<br>ln -s /usr/local/node/bin/npm /usr/bin/npm<br><span class="hljs-meta prompt_">#</span><span class="language-bash">验证环境变量</span><br>node -v<br>npm -v<br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置安装路径</span><br>cd /usr/local/node/<br>mkdir -p node_global<br>mkdir -p node_cache<br>npm config set prefix &quot;node_global&quot;<br>npm config set cache &quot;node_cache&quot;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">npm慢的话装个cnmp</span><br>npm install cnpm -g --registry=https://registry.npm.taobao.org<br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装依赖</span><br>npm install<br></code></pre></td></tr></table></figure>
+
+<p>建账号、库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">USER</span> user_mo PASS <span class="hljs-string">&#x27;Lunz2017&#x27;</span>;<br><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">USER</span> user_mo PRIVILEGE write;<br><span class="hljs-keyword">CREATE</span> DATABASE IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> statsd <span class="hljs-keyword">UPDATE</span> <span class="hljs-number">2</span>;<br><span class="hljs-keyword">CREATE</span> DATABASE IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> collectd <span class="hljs-keyword">UPDATE</span> <span class="hljs-number">2</span>;<br><span class="hljs-keyword">CREATE</span> DATABASE IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> telegraf <span class="hljs-keyword">UPDATE</span> <span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
+
+<p>编辑TD配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs shel">vim /etc/taos/taosadapter.toml<br><br>[statsd]<br>enable = true<br>port = 6044<br>db = &quot;statsd&quot;<br>user = &quot;user_mo&quot;<br>password = &quot;Lunz2017&quot;<br>worker = 10<br>gatherInterval = &quot;5s&quot;<br>protocol = &quot;udp&quot;<br>maxTCPConnections = 250<br>tcpKeepAlive = false<br>allowPendingMessages = 50000<br>deleteCounters = true<br>deleteGauges = true<br>deleteSets = true<br>deleteTimings = true<br></code></pre></td></tr></table></figure>
+
+<p>编辑statd配置文件，假设文件夹位置 &#x2F;opt&#x2F;statsd</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd  /opt/statsd<br>cp exampleConfig.js tdconfig.js<br>vim /opt/statsd/tdconfig.js<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br><span class="hljs-attr">port</span>: <span class="hljs-number">8125</span><br>, <span class="hljs-attr">backends</span>: [<span class="hljs-string">&quot;./backends/repeater&quot;</span>]<br>, <span class="hljs-attr">repeater</span>: [&#123; <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;192.168.200.99&#x27;</span>, <span class="hljs-attr">port</span>: <span class="hljs-number">6044</span>&#125;]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">node stats.js tdconfig.js &amp;<br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum install nc<br>echo &quot;foo:1|c&quot; | nc -u -w1 192.168.200.99 8125<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="collectd-安装"><a href="#collectd-安装" class="headerlink" title="collectd 安装"></a>collectd 安装</h3><p>下载安装包</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.189.cn/t/bM3eAzAjQv2y%EF%BC%88%E8%AE%BF%E9%97%AE%E7%A0%81%EF%BC%9A4mew%EF%BC%89">https://cloud.189.cn/t/bM3eAzAjQv2y（访问码：4mew）</a></p>
+<p>编译安装 略</p>
+<p>配置接收直接采集插件数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /opt/collectd/etc/collectd.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">td官方文档默认编译安装位置 /etc/collectd/collectd.conf  验证非此文件</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs conf">LoadPlugin network<br>&lt;Plugin network&gt;<br>         Server &quot;192.168.200.99&quot; &quot;6045&quot;<br>&lt;/Plugin&gt;<br></code></pre></td></tr></table></figure>
+
+<p>配置write_tsdb 插件数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /opt/collectd/etc/collectd.conf<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs conf">LoadPlugin write_tsdb<br>&lt;Plugin write_tsdb&gt;<br>        &lt;Node&gt;<br>                Host &quot;192.168.200.99&quot;<br>                Port &quot;6047&quot;<br>                HostTags &quot;status=production&quot;<br>                StoreRates false<br>                AlwaysAppendDS false<br>        &lt;/Node&gt;<br>&lt;/Plugin&gt;<br></code></pre></td></tr></table></figure>
+
+<p>编辑配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /etc/taos/taosadapter.toml<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-section">[opentsdb_telnet]</span><br><span class="hljs-attr">enable</span> = <span class="hljs-literal">true</span><br><span class="hljs-attr">maxTCPConnections</span> = <span class="hljs-number">250</span><br><span class="hljs-attr">tcpKeepAlive</span> = <span class="hljs-literal">false</span><br><span class="hljs-attr">dbs</span> = [<span class="hljs-string">&quot;opentsdb_telnet&quot;</span>, <span class="hljs-string">&quot;collectd&quot;</span>, <span class="hljs-string">&quot;icinga2&quot;</span>, <span class="hljs-string">&quot;tcollector&quot;</span>]<br><span class="hljs-attr">ports</span> = [<span class="hljs-number">6046</span>, <span class="hljs-number">6047</span>, <span class="hljs-number">6048</span>, <span class="hljs-number">6049</span>]<br><span class="hljs-attr">user</span> = <span class="hljs-string">&quot;user_mo&quot;</span><br><span class="hljs-attr">password</span> = <span class="hljs-string">&quot;Lunz2017&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>建立服务软连接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">环境变量</span><br>ln -s /opt/collectd/sbin/collectd /usr/sbin/collectd<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注册服务 这玩意不好使直接去库里验证数据吧</span><br>ln -s /opt/collectd/sbin/collectd /etc/init.d/collectd<br></code></pre></td></tr></table></figure>
+
+<p>启动服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">collectd<br>ps -ef|grep collectd<br></code></pre></td></tr></table></figure>
+
+<p>连接数据库查看collectd库内数据</p>
+<p>验证存入数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql">use collectd;<br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> cpu_value limit <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="应用3-另一种监控"><a href="#应用3-另一种监控" class="headerlink" title="应用3 另一种监控"></a>应用3 另一种监控</h2><p>安装 Telegraf 监控系统</p>
+<p>添加镜像源</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat &lt;&lt;EOF | sudo tee /etc/yum.repos.d/influxdata.repo<br>[influxdata]<br>name = InfluxData Repository - Stable<br>baseurl = https://repos.influxdata.com/stable/\$basearch/main<br>enabled = 1<br>gpgcheck = 1<br>gpgkey = https://repos.influxdata.com/influxdb.key<br>EOF<br></code></pre></td></tr></table></figure>
+
+<p>安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo yum install telegraf<br></code></pre></td></tr></table></figure>
+
+<p>rpm安装：</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.189.cn/t/NZVVjaiYrYve%EF%BC%88%E8%AE%BF%E9%97%AE%E7%A0%81%EF%BC%9Ait2m%EF%BC%89">https://cloud.189.cn/t/NZVVjaiYrYve（访问码：it2m）</a></p>
+<p>修改配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">/etc/telegraf/telegraf.conf<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs conf">[[outputs.http]]<br>  url = &quot;http://192.168.200.99:6041/influxdb/v1/write?db=telegraf&quot;<br>  method = &quot;POST&quot;<br>  timeout = &quot;5s&quot;<br>  username = &quot;user_mo&quot;<br>  password = &quot;Lunz2017&quot;<br>  data_format = &quot;influx&quot;<br>  influx_max_line_bytes = 250<br></code></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo systemctl restart telegraf<br></code></pre></td></tr></table></figure>
+
+<p>验证存入数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql">use telegraf;<br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> cpu limit <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">时序数据库</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%BA%93/TDEngine/" class="category-chain-item">TDEngine</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/TDEngine/">#TDEngine</a>
+      
+        <a href="/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%BA%93/">#时序数据库</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>TDEngine应用测试</div>
+      <div>https://blog.wongcw.cn/2022/06/02/TDEngine应用测试/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>wangcw</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月2日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Theme By Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?663d1a6ec35b55e9fe6afb524ef4adaf";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
