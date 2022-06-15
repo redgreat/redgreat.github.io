@@ -77,8 +77,6 @@
       
       <category>数据库</category>
       
-      <category>时序数据库</category>
-      
       <category>TDEngine</category>
       
     </categories>
@@ -199,8 +197,6 @@
       
       <category>数据库</category>
       
-      <category>OLAP</category>
-      
       <category>AnalyticDB</category>
       
     </categories>
@@ -229,8 +225,6 @@
     <categories>
       
       <category>数据库</category>
-      
-      <category>OLAP</category>
       
       <category>AnalyticDB</category>
       
@@ -261,8 +255,6 @@
       
       <category>数据库</category>
       
-      <category>OLAP</category>
-      
       <category>AnalyticDB</category>
       
     </categories>
@@ -291,8 +283,6 @@
     <categories>
       
       <category>数据库</category>
-      
-      <category>OLAP</category>
       
       <category>AnalyticDB</category>
       
