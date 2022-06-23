@@ -16,27 +16,25 @@
   <meta name="author" content="wangcw">
   <meta name="keywords" content="">
   
-    <meta name="description" content="MySQL2MongoDB1.Josn配置文件可能加载失败，需要核对各参数，严格按照官方样例写参数，即使是Json格式也可能解析失败！ 2.源库单表数据量过大时一定要加主键，加分片键 “splitPk“，分片键必需为主键、int整数型，此键可以不包含在所传输字段中； 3.报错： 1Exception in thread &quot;taskGroup-0&quot; com.alibaba.dat">
+    <meta name="description" content="因阿里云es有多多限制，自建下es，使用docker安装 查询镜像 123456#搜索镜像docker search elasticsearchdocker search kibana#查看所有历史版本curl https:&#x2F;&#x2F;registry.hub.docker.com&#x2F;v1&#x2F;repositories&#x2F;elasticsearch&#x2F;tags| tr -d &amp;#x27;[\[\]&quot; ]&amp;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DataX-MySQL2MongoDB案例">
-<meta property="og:url" content="https://blog.wongcw.cn/2022/05/31/MySQL2MongoDB%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/index.html">
+<meta property="og:title" content="blogwong">
+<meta property="og:url" content="https://blog.wongcw.cn/2022/06/17/es%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="blogwong">
-<meta property="og:description" content="MySQL2MongoDB1.Josn配置文件可能加载失败，需要核对各参数，严格按照官方样例写参数，即使是Json格式也可能解析失败！ 2.源库单表数据量过大时一定要加主键，加分片键 “splitPk“，分片键必需为主键、int整数型，此键可以不包含在所传输字段中； 3.报错： 1Exception in thread &quot;taskGroup-0&quot; com.alibaba.dat">
+<meta property="og:description" content="因阿里云es有多多限制，自建下es，使用docker安装 查询镜像 123456#搜索镜像docker search elasticsearchdocker search kibana#查看所有历史版本curl https:&#x2F;&#x2F;registry.hub.docker.com&#x2F;v1&#x2F;repositories&#x2F;elasticsearch&#x2F;tags| tr -d &amp;#x27;[\[\]&quot; ]&amp;">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-31T01:19:11.000Z">
-<meta property="article:modified_time" content="2022-06-14T15:39:47.583Z">
+<meta property="og:image" content="https://picwong.oss-cn-qingdao.aliyuncs.com/zr.wongcw/202206221344241.png">
+<meta property="article:published_time" content="2022-06-17T06:32:41.058Z">
+<meta property="article:modified_time" content="2022-06-23T01:11:06.054Z">
 <meta property="article:author" content="wangcw">
-<meta property="article:tag" content="ETL">
-<meta property="article:tag" content="DataX">
-<meta property="article:tag" content="MySQL">
-<meta property="article:tag" content="MongoDB">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picwong.oss-cn-qingdao.aliyuncs.com/zr.wongcw/202206221344241.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>DataX-MySQL2MongoDB案例 - blogwong</title>
+  <title>blogwong</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="DataX-MySQL2MongoDB案例"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -210,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-05-31 09:19" pubdate>
-          2022年5月31日 上午
+        <time datetime="2022-06-17 14:32" pubdate>
+          2022年6月17日 下午
         </time>
       </span>
     
@@ -222,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          3.4k 字
         
       </span>
     
@@ -233,7 +231,7 @@
         
         
         
-          15 分钟
+          29 分钟
         
       </span>
     
@@ -279,21 +277,110 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">DataX-MySQL2MongoDB案例</h1>
+            <h1 style="display: none"></h1>
             
             <div class="markdown-body">
               
-              <h3 id="MySQL2MongoDB"><a href="#MySQL2MongoDB" class="headerlink" title="MySQL2MongoDB"></a>MySQL2MongoDB</h3><p>1.Josn配置文件可能加载失败，需要核对各参数，严格按照官方样例写参数，即使是Json格式也可能解析失败！</p>
-<p>2.源库单表数据量过大时一定要加主键，加分片键 “<strong>splitPk</strong>“，分片键必需为主键、int整数型，此键可以不包含在所传输字段中；</p>
-<p>3.报错：</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">Exception</span> <span class="hljs-keyword">in</span> thread &quot;taskGroup-0&quot; com.alibaba.datax.common.<span class="hljs-keyword">exception</span>.DataXException: Code:[DBUtilErrorCode<span class="hljs-number">-07</span>], Description:[读取数据库数据失败. 请检查您的配置的 <span class="hljs-keyword">column</span>/<span class="hljs-keyword">table</span>/<span class="hljs-keyword">where</span>/querySql或者向 DBA 寻求帮助.].  - 执行的<span class="hljs-keyword">SQL</span>为: <span class="hljs-keyword">select</span> WorkOrderId,CustStoreId,CustStoreName,CustStoreCode,PreCustStoreId,PreCustStoreName,CustSettleId,CustSettleName,IsCustomer,CustCoopType,ProCode,AppCode,ProName,CityCode,CityName,AreaCode,AreaName,InstallAddress,InstallTime,RequiredTime,LinkMan,LinkTel,SourceType,SecondLinkTel,SecondLinkMan,WarehouseId,WarehouseName,Remark,IsUrgent,CustUniqueSign,CreatePersonCode,CreatePersonName,EffectiveTime,OrderType,EffectiveSuccessfulTime,CreatedById,CreatedAt,UpdatedById,UpdatedAt,DeletedById,DeletedAt,Deleted,AppointStatus,ServiceCode,CreateType,ServiceName,RecCompleteTime,RecRecordPersonCode,RecRecordPersonName,WfOrderCompletetime,WfAssignor,WfDirectOrderAccept,WorkOdrTypeStatus,WorkOdrCloseStatusName,WorkOdrSuspendStatus,WorkStatus,WorkOdrClosedAt,AFCCreatedAt,AFCRetreatTime,AFCFollowFrequency,AFCIfRemove,AFCReturnedTypeCode,VHSAppraisalStatus,VHSReceiverLoginName,OperatingInfo,OperatedInfo,ServiceProviderCode,WorkflowInfo,WorkServiceSubject,AFCWorkFinanceRecord,AFCPaymentReport,VHSWorkFileReceiveInfo,CustomerId,CustomerName <span class="hljs-keyword">from</span> workjsoninfo  <span class="hljs-keyword">where</span>  (<span class="hljs-number">169036</span> &lt;= Id <span class="hljs-keyword">AND</span> Id &lt; <span class="hljs-number">338071</span>)  具体错误信息为：com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Application was streaming results <span class="hljs-keyword">when</span> the <span class="hljs-keyword">connection</span> failed. Consider raising <span class="hljs-keyword">value</span> <span class="hljs-keyword">of</span> <span class="hljs-string">&#x27;net_write_timeout&#x27;</span> <span class="hljs-keyword">on</span> the <span class="hljs-keyword">server</span>.<br></code></pre></td></tr></table></figure>
+              <p>因阿里云es有多多限制，自建下es，使用docker安装</p>
+<p>查询镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">搜索镜像</span><br>docker search elasticsearch<br>docker search kibana<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看所有历史版本</span><br>curl https://registry.hub.docker.com/v1/repositories/elasticsearch/tags| tr -d &#x27;[\[\]&quot; ]&#x27; | tr &#x27;&#125;&#x27; &#x27;\n&#x27;| awk -F: -v image=&#x27;elasticsearch&#x27; &#x27;&#123;if(NR!=NF &amp;&amp; $3 != &quot;&quot;)&#123;printf(&quot;%s:%s\n&quot;,image,$3)&#125;&#125;&#x27;<br>curl https://registry.hub.docker.com/v1/repositories/elastic/kibana/tags| tr -d &#x27;[\[\]&quot; ]&#x27; | tr &#x27;&#125;&#x27; &#x27;\n&#x27;| awk -F: -v image=&#x27;kibana&#x27; &#x27;&#123;if(NR!=NF &amp;&amp; $3 != &quot;&quot;)&#123;printf(&quot;%s:%s\n&quot;,image,$3)&#125;&#125;&#x27;<br></code></pre></td></tr></table></figure>
 
-<p>解决方法：</p>
-<p>增加源端 wait_timeout 参数值。</p>
-<p>NULL值处理</p>
-<p>问题：mysql2mongo数据库传输，不识别mysql内josn字段，因为datax会给json增加转义字符 “&quot;</p>
-<p>解决方法:源端字段类型改为varchar，入目标为array类型，mongodbwriter需要指定特殊解析数组分隔符；</p>
-<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>1.单 executor执行速度有限，尽量开多管道；</p>
+<p>拉取镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker pull elasticsearch:7.10.1<br>docker pull kibana:7.10.1<br></code></pre></td></tr></table></figure>
+
+<p>创建数据文件夹</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">mkdir -p /opt/elasticsearch/config<br>mkdir -p /opt/elasticsearch/data<br><br>echo &quot;http.host: 0.0.0.0&quot; &gt;/opt/elasticsearch/config/elasticsearch.yml<br>chmod -R 777 /opt/elasticsearch/<br></code></pre></td></tr></table></figure>
+
+<p>启动容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">首次启动</span><br>docker run --name elasticsearch -p 9200:9200 -p 9300:9300 -d elasticsearch:7.10.1<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看容器中配置文件路径</span><br>find / -name elasticsearch.yml<br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除容器</span><br>docker container ls -all<br>docker rm &#123;$containerid&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">ES</span><br>docker run --name elasticsearch -p 9200:9200 -p 9300:9300 \<br>-e  &quot;discovery.type=single-node&quot; \<br>-e ES_JAVA_OPTS=&quot;-Xms64m -Xmx512m&quot; \<br>-v /opt/elasticsearch/config/elasticsearch.yml:/var/lib/docker/overlay2/cb02e3fbbb80dfb252f1e7aaa1b35307f1424cbe21baf11bf36c7d895c572ff3/diff/usr/share/elasticsearch/config/elasticsearch.yml \<br>-v /opt/elasticsearch/data:/var/lib/docker/overlay2/cb02e3fbbb80dfb252f1e7aaa1b35307f1424cbe21baf11bf36c7d895c572ff3/diff/usr/share/elasticsearch/data \<br>-v /opt/elasticsearch/plugins:/var/lib/docker/overlay2/cb02e3fbbb80dfb252f1e7aaa1b35307f1424cbe21baf11bf36c7d895c572ff3/diff/usr/share/elasticsearch/plugins \<br>-d elasticsearch:7.10.1 <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">设置开机启动elasticsearch</span><br>docker update elasticsearch --restart=always<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Kibana</span><br>docker run --name kibana -e ELASTICSEARCH_HOSTS=http://10.0.16.15:9200 -p 5601:5601 \<br>-e ES_JAVA_OPTS=&quot;-Xms32m -Xmx128m&quot; \<br>-d kibana:7.10.1<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">设置开机启动kibana</span><br>docker update kibana  --restart=always<br></code></pre></td></tr></table></figure>
+
+<p>查看容器运行状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker ps --format &quot;table &#123;&#123;.ID&#125;&#125;\t&#123;&#123;.Names&#125;&#125;\t&#123;&#123;.Ports&#125;&#125;\t&#123;&#123;.Status&#125;&#125;&quot;<br></code></pre></td></tr></table></figure>
+
+<p>开启xpack</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">进入容器</span><br>docker attach elasticsearch<br><span class="hljs-meta prompt_">#</span><span class="language-bash">进不去的话换这个</span><br>docker exec -it elasticsearch /bin/bash<br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改配置文件</span><br>cd config<br>vi elasticsearch.yml<br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加保存</span><br>xpack.security.enabled: true<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启elasticsearch容器</span><br>docker restart elasticsearch<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新进入</span><br>docker exec -it elasticsearch /bin/bash<br><span class="hljs-meta prompt_">#</span><span class="language-bash">初始化密码</span><br>cd /bin<br>./elasticsearch-setup-passwords interactive<br><span class="hljs-meta prompt_">#</span><span class="language-bash">此处需要出入n个密码</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">修改kibana配置文件</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">进入容器</span><br>docker exec -it kibana /bin/bash<br>cd config<br>vi kibana.yaml<br></code></pre></td></tr></table></figure>
+
+<p>新增连接es的地址、账号密码，添加汉化配置</p>
+<p><img src="https://picwong.oss-cn-qingdao.aliyuncs.com/zr.wongcw/202206221344241.png" srcset="/img/loading.gif" lazyload></p>
+<p>重启</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker restart kibana<br></code></pre></td></tr></table></figure>
+
+<p>安装插件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">进入目录</span><br>docker exec -it elasticsearch /bin/bash<br>cd bin<br><span class="hljs-meta prompt_">#</span><span class="language-bash">下载</span><br>wget https://d3g5vo6xdbdb9a.cloudfront.net/downloads/elasticsearch-plugins/opendistro-sql/opendistro_sql-1.12.0.0.zip<br>mv opendistro_sql-1.12.0.0.zip /tmp/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">执行</span><br>./elasticsearch-plugin install file:///tmp/opendistro_sql-1.12.0.0.zip<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<p>与关系型数据库对应关系</p>
+<table>
+<thead>
+<tr>
+<th>MySQL</th>
+<th>ElasticSearch</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Table</td>
+<td>Index</td>
+</tr>
+<tr>
+<td>Table</td>
+<td>Type</td>
+</tr>
+<tr>
+<td>Row</td>
+<td>Document</td>
+</tr>
+<tr>
+<td>Column</td>
+<td>Field</td>
+</tr>
+<tr>
+<td>Schema</td>
+<td>Mapping</td>
+</tr>
+<tr>
+<td>Index</td>
+<td>Everything is indexed</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>Query DSL</td>
+</tr>
+<tr>
+<td>select * from …</td>
+<td>GET  http:&#x2F;&#x2F;…</td>
+</tr>
+<tr>
+<td>update table set …</td>
+<td>POST  http:&#x2F;&#x2F;…</td>
+</tr>
+<tr>
+<td>group by、avg、sum</td>
+<td>Aggregations</td>
+</tr>
+<tr>
+<td>去重 distinct</td>
+<td>cardinality</td>
+</tr>
+<tr>
+<td>数据迁移</td>
+<td>reindex</td>
+</tr>
+</tbody></table>
+<p>Mapping 映射</p>
+<p>模板、动态模板</p>
+<p>Mapping参数</p>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-params.html#mapping-params">https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-params.html#mapping-params</a></p>
+<p>Field字段类型</p>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html#mapping-types">https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html#mapping-types</a></p>
 
               
             </div>
@@ -301,47 +388,6 @@
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/ETL%E5%B7%A5%E5%85%B7/" class="category-chain-item">ETL工具</a>
-  
-  
-    <span>></span>
-    
-  <a href="/categories/ETL%E5%B7%A5%E5%85%B7/%E7%A6%BB%E7%BA%BF%E5%90%8C%E6%AD%A5/" class="category-chain-item">离线同步</a>
-  
-  
-
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/ETL/">#ETL</a>
-      
-        <a href="/tags/DataX/">#DataX</a>
-      
-        <a href="/tags/MySQL/">#MySQL</a>
-      
-        <a href="/tags/MongoDB/">#MongoDB</a>
-      
-    </div>
   
 </div>
 
@@ -351,8 +397,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>DataX-MySQL2MongoDB案例</div>
-      <div>https://blog.wongcw.cn/2022/05/31/MySQL2MongoDB注意事项/</div>
+      <div></div>
+      <div>https://blog.wongcw.cn/2022/06/17/es学习/</div>
     </div>
     <div class="license-meta">
       
@@ -364,7 +410,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年5月31日</div>
+          <div>2022年6月17日</div>
         </div>
       
       
