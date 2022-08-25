@@ -1,0 +1,831 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="wangcw">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="sysBench是一个模块化工具，用于测试各种不同系统参数下的OLAP(MySQL&#x2F;PorsgreSQL&#x2F;Oracle)数据库负载情况。 仓库地址：https:&#x2F;&#x2F;github.com&#x2F;akopytov&#x2F;sysbench （1）CPU性能（2）磁盘IO性能（3）内存分配及传输速度（4）POSIX线程性能（5）mutex调度性能（6）数据库性能(OLTP基准测试)  系统安装 编译、yum都可以，网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQl压测工具-sysbench">
+<meta property="og:url" content="https://blog.wongcw.cn/2022/06/27/MySQl%E5%8E%8B%E6%B5%8B%E5%B7%A5%E5%85%B7-sysbench/index.html">
+<meta property="og:site_name" content="blogwong">
+<meta property="og:description" content="sysBench是一个模块化工具，用于测试各种不同系统参数下的OLAP(MySQL&#x2F;PorsgreSQL&#x2F;Oracle)数据库负载情况。 仓库地址：https:&#x2F;&#x2F;github.com&#x2F;akopytov&#x2F;sysbench （1）CPU性能（2）磁盘IO性能（3）内存分配及传输速度（4）POSIX线程性能（5）mutex调度性能（6）数据库性能(OLTP基准测试)  系统安装 编译、yum都可以，网">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picwong.oss-cn-qingdao.aliyuncs.com/zr.wongcw/202206270957063.png">
+<meta property="article:published_time" content="2022-06-27T03:53:08.000Z">
+<meta property="article:modified_time" content="2022-06-27T06:03:16.000Z">
+<meta property="article:author" content="wangcw">
+<meta property="article:tag" content="数据库压测">
+<meta property="article:tag" content="sysbench">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picwong.oss-cn-qingdao.aliyuncs.com/zr.wongcw/202206270957063.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>MySQl压测工具-sysbench - blogwong</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/xiantiao.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/qipao.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/xiaoxuehua.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/daxuehua.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/timeDate.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/css/toubudaziji.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.wongcw.cn","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"663d1a6ec35b55e9fe6afb524ef4adaf","google":"GTM-T9V396Z","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?663d1a6ec35b55e9fe6afb524ef4adaf";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'GTM-T9V396Z', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>blogwong</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MySQl压测工具-sysbench"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-27 11:53" pubdate>
+          2022年6月27日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          130 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">MySQl压测工具-sysbench</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>sysBench是一个模块化工具，用于测试各种不同系统参数下的OLAP(MySQL/PorsgreSQL/Oracle)数据库负载情况。</p>
+<p>仓库地址：<a target="_blank" rel="noopener" href="https://github.com/akopytov/sysbench">https://github.com/akopytov/sysbench</a></p>
+<p>（1）CPU性能<br>（2）磁盘IO性能<br>（3）内存分配及传输速度<br>（4）POSIX线程性能<br>（5）mutex调度性能<br>（6）数据库性能(OLTP基准测试) </p>
+<p><strong>系统安装</strong></p>
+<p>编译、yum都可以，网上很多教程。</p>
+<p><strong>指令参数</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench [general-options]... --test=&lt;test-name&gt; [test-options]... command <br><br>--threads: 线程数，若设置为2，则sysbench会启动2个线程，同时分别进行素数的计算，默认值为1。<br>--time: 运行时长，单位秒。若设置为5，则sysbench会在5秒内循环进行素数计算，每完成一轮就是一个event，默认值为10。<br>--events: event上限次数，若设置为100，则表示当完成100次event后，即使时间富余也停止运行。默认值为0，则表示不限event次数。<br>--forced-shutdown=STRING：超时强制中断，默认为off。     --thread-stack-size=SIZE：线程栈大小，默认64K<br>--thread-init-timeout=N：线程初始化等待时间，默认为30秒<br>--rate=N：平均事务率，0表示不限制，默认为0。              <br>--report-interval=N：测试进度报告输出的时间间隔，0表示关闭，默认为0。<br>--report-checkpoints=[LIST,...]：转储完全统计信息并在指定时间点复位所有计数器，参数是逗号分隔值的列表，表示从必须执行报告检查点的测试开始所经过的时间（以秒为单位）。 默认情况下，报告检查点处于关闭状态[off]。<br>--debug[=on|off]：打印调试信息，默认为off<br>--validate[=on|off]：尽可能执行验证检查，默认为off。        <br>--help[=on|off]：打印help信息并退出，默认为off             <br>--version[=on|off]：打印版本信息并退出，默认为off           <br>--config-file=FILENAME：命令行选项文件<br>--luajit-cmd=STRING：执行LuaJIT控制命令<br></code></pre></td></tr></table></figure>
+
+<p>commond:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">prepare：测试前准备工作，例如为fileis测试在磁盘上创建必要的文件，为OLTP测试准备测试数据 <br>run：执行完整的测试，必须指定–-test选项 <br>cleanup：测试结束后删除数据<br>help：帮助<br></code></pre></td></tr></table></figure>
+
+<p>**CPU性能测试 **</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench --test=cpu help<br>cpu options:<br>  --cpu-max-prime=N upper limit for primes generator [10000]<br></code></pre></td></tr></table></figure>
+
+<p>–cpu-max-prime：素数生成数量的上限，若设置为3，则表示2、3、5（要计算1-5共5次），默认值为10000。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench cpu --cpu-max-prime=20000 --threads=8 --time=30 run<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://picwong.oss-cn-qingdao.aliyuncs.com/zr.wongcw/202206270957063.png" srcset="/img/loading.gif" lazyload alt="image-20220627095739910"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs log">Prime numbers limit: 20000，每个线程产生的素数上限均为2000<br>events per second: 721.63，所有线程每秒完成了721.63次event<br>total time: 30.0056s，共耗时30秒<br>total number of events: 21654，30秒内所有线程一共完成了21654次event<br>min: 2.70，完成1次event的最少耗时2.70秒<br>avg: 11.08，所有event的平均耗时11.08毫秒<br>max: 129.76，完成1次event的最多耗时129.76毫秒<br>95th percentile: 30.26， 95%次event在30.26秒毫秒内完成<br>sum: 239822.50，每个线程耗时30秒，8个线程叠加耗时就是240秒<br>events (avg/stddev): 2706.7500/362.10 // 平均每个线程完成2706次event，标准差为362<br>execution time (avg/stddev): 29.9778/0.01 // 每个线程平均耗时29秒，标准差为0<br></code></pre></td></tr></table></figure>
+
+<p><strong>内存负载测试</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench  --test=memory help<br>memory options:<br>  --memory-block-size=SIZE    测试block块大小 [默认1K]<br>  --memory-total-size=SIZE    文件总传输量 [默认100G]<br>  --memory-scope=STRING       memory access scope &#123;global,local&#125; [global]<br>  --memory-hugetlb[=on|off]   allocate memory from HugeTLB pool [off]<br>  --memory-oper=STRING        type of memory operations &#123;read, write, none&#125; [write]<br>  --memory-access-mode=STRING memory access mode &#123;seq,rnd&#125; [seq]<br></code></pre></td></tr></table></figure>
+
+<p>开启12个线程，内存块大小为8K，顺序读写</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench memory --threads=12 --memory-block-size=8K --memory-total-size=100G --memory-access-mode=seq run<br>Running the test with following options:<br>Number of threads: 12<br>Initializing random number generator from current time<br>Running memory speed test with the following options:<br>  block size: 8KiB<br>  total size: 102400MiB<br>  operation: write<br>  scope: global<br>Initializing worker threads...<br>Threads started!<br>Total operations: 13107192 (1684079.88 per second)<br>102399.94 MiB transferred (13156.87 MiB/sec)<br>General statistics:<br>    total time:                          7.7816s<br>    total number of events:              13107192<br>Latency (ms):<br>         min:                                    0.00<br>         avg:                                    0.01<br>         max:                                  139.09<br>         95th percentile:                        0.00<br>         sum:                                68748.61<br>Threads fairness:<br>    events (avg/stddev):           1092266.0000/0.00<br>    execution time (avg/stddev):   5.7291/1.08<br><br>sysbench memory --threads=12 --memory-block-size=8K --memory-total-size=100G --memory-access-mode=rnd run<br>Running the test with following options:<br>Number of threads: 12<br>Initializing random number generator from current time<br>Running memory speed test with the following options:<br>  block size: 8KiB<br>  total size: 102400MiB<br>  operation: write<br>  scope: global<br>Initializing worker threads...<br>Threads started!<br>Total operations: 3099810 (309929.69 per second)<br>24217.27 MiB transferred (2421.33 MiB/sec)<br>General statistics:<br>    total time:                          10.0002s<br>    total number of events:              3099810<br>Latency (ms):<br>         min:                                    0.00<br>         avg:                                    0.04<br>         max:                                   95.04<br>         95th percentile:                        0.01<br>         sum:                               116396.55<br>Threads fairness:<br>    events (avg/stddev):           258317.5000/22378.41<br>    execution time (avg/stddev):   9.6997/0.09    <br></code></pre></td></tr></table></figure>
+
+<p><strong>磁盘IO性能基准测试</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench --test=fileio help<br>fileio options:<br>  --file-num=N：生成测试文件的数量，默认为128。<br>  --file-block-size=N：测试时所使用文件块的大小，如果想磁盘针对innodb存储引擎进行测试，可以将其设置为16384（innodb存储引擎页的大小），默认为16384。<br>  --file-total-size=SIZE：创建测试文件的总大小，默认为2G大小。<br>  --file-test-mode=STRING：文件测试模式，seqwr(顺序写)、seqrewr(顺序读写)、seqrd(顺序读)、rndrd(随机读)、rndwr(随机写)、rndrw(随机读写)。<br>  --file-io-mode=STRING：文件操作模式，sync（同步）、async（异步）、fastmmap（快速mmap）、slowmmap（慢速mmap），默认为sync。<br>  --file-async-backlog=N：对应每个线程队列的异步操作数，默认为128。<br>  --file-extra-flags=STRING：打开文件时的选项，与API相关的参数。<br>  --file-fsync-freq=N：执行fsync函数的频率。fsync主要是同步磁盘文件，0代表不使用fsync函数，默认值为100。<br>  --file-fsync-all=[on|off]：每执行完一次写操作，就执行一次fsync。默认为off。<br>  --file-fsync-end=[on|off]：测试结束时执行fsync函数，默认为on。<br>  --file-fsync-mode=STRING：文件同步函数选择，和API相关的参数，由于多个操作系统对于fdatasync支持不同，因此不建议使用fdatasync，默认为fsync。<br>  --file-merged-requests=N：大多情况下，合并可能的IO的请求数，默认为0。<br>  --file-rw-ratio=N：测试时的读写比例，默认时为1.5，即可3：2。<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">数据准备</span><br>sysbench fileio --file-num=16 --file-total-size=2G prepare<br><span class="hljs-meta prompt_">#</span><span class="language-bash">测试</span><br>sysbench fileio --file-total-size=2G --file-test-mode=rndrd --time=180  --threads=16  --file-num=16 --file-extra-flags=direct --file-fsync-freq=0 --file-block-size=16384 run<br><span class="hljs-meta prompt_">#</span><span class="language-bash">测试数据清理</span><br>sysbench fileio --file-num=16 --file-total-size=2G cleanup<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs log">Running the test with following options:<br>Number of threads: 16<br>Initializing random number generator from current time<br>Extra file open flags: directio<br>16 files, 128MiB each<br>2GiB total file size<br>Block size 16KiB<br>Number of IO requests: 0<br>Read/Write ratio for combined random IO test: 1.50<br>Calling fsync() at the end of test, Enabled.<br>Using synchronous I/O mode<br>Doing random read test<br>Initializing worker threads...<br>Threads started!<br>File operations:<br>    reads/s:                      2291.53<br>    writes/s:                     0.00<br>    fsyncs/s:                     0.00<br>Throughput:<br>    read, MiB/s:                  35.81<br>    written, MiB/s:               0.00<br>General statistics:<br>    total time:                          180.0079s<br>    total number of events:              412498<br>Latency (ms):<br>         min:                                    0.10<br>         avg:                                    6.98<br>         max:                                   49.85<br>         95th percentile:                        9.91<br>         sum:                              2879915.11<br>Threads fairness:<br>    events (avg/stddev):           25781.1250/46.71<br>    execution time (avg/stddev):   179.9947/0.00<br></code></pre></td></tr></table></figure>
+
+<p><strong>多线程调度基准测试</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench  --test=mutex help <br>mutex options:<br>  --mutex-num=N   total size of mutex array [4096]<br>  --mutex-locks=N number of mutex locks to do per thread [50000]<br>  --mutex-loops=N number of empty loops to do outside mutex lock [10000]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench mutex --threads=8 --mutex-num=2000 --mutex-locks=10000 --mutex-loops=5000 run<br>Running the test with following options:<br>Number of threads: 8<br>Initializing random number generator from current time<br>Initializing worker threads...<br>Threads started!<br>General statistics:<br>    total time:                          0.1319s<br>    total number of events:              8<br>Latency (ms):<br>         min:                                   33.03<br>         avg:                                   98.79<br>         max:                                  128.91<br>         95th percentile:                      127.81<br>         sum:                                  790.31<br>Threads fairness:<br>    events (avg/stddev):           1.0000/0.00<br>    execution time (avg/stddev):   0.0988/0.03<br></code></pre></td></tr></table></figure>
+
+<p><strong>POST多线程基准测试</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench  --test=threads help<br>threads options:<br>  --threads=N 开启线程数量<br>  --thread-yields=N number of yields to do per request [1000]<br>  --thread-locks=N  number of locks per thread [8]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs shell">sysbench threads --threads=8 --thread-yields=200 --thread-locks=2 run<br>Running the test with following options:<br>Number of threads: 8<br>Initializing random number generator from current time<br>Initializing worker threads...<br>Threads started!<br>General statistics:<br>    total time:                          10.0018s<br>    total number of events:              30114<br>Latency (ms):<br>         min:                                    0.16<br>         avg:                                    2.66<br>         max:                                  239.52<br>         95th percentile:                        7.56<br>         sum:                                79992.02<br>Threads fairness:<br>    events (avg/stddev):           3764.2500/200.20<br>    execution time (avg/stddev):   9.9990/0.00<br></code></pre></td></tr></table></figure>
+
+<p><strong><font color=red>OLTP基准测试</font></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">参数解析</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">连接信息</span><br>--mysql-host：MySQL服务器主机名，默认localhost；如果在本机上使用localhost报错，提示无法连接MySQL服务器，改成本机的IP地址应该就可以了。<br>--mysql-port：MySQL服务器端口，默认3306<br>--mysql-user：用户名<br>--mysql-password：密码<br><span class="hljs-meta prompt_">#</span><span class="language-bash">=执行参数</span><br>--oltp-test-mode：执行模式，包括simple、nontrx和complex，默认是complex。simple模式下只测试简单的查询；nontrx不仅测试查询，还测试插入更新等，但是不使用事务；complex模式下测试最全面，会测试增删改查，而且会使用事务。可以根据自己的需要选择测试模式。<br>--oltp-tables-count：测试的表数量，根据实际情况选择<br>--oltp-table-size：测试的表的大小，根据实际情况选择<br>--threads：客户端的并发连接数<br>--time：测试执行的时间，单位是秒，该值不要太短，可以选择120<br></code></pre></td></tr></table></figure>
+
+<p>Lua脚本用途</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>脚本名称</strong></th>
+<th align="center"><strong>脚本作用</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">bulk_insert</td>
+<td align="center">批量插入性能</td>
+</tr>
+<tr>
+<td align="center">oltp_common</td>
+<td align="center">初始化脚本，表结构初始化，数据填充方式等</td>
+</tr>
+<tr>
+<td align="center">oltp_delete</td>
+<td align="center">事务性删除性能</td>
+</tr>
+<tr>
+<td align="center">oltp_insert</td>
+<td align="center">事务性插入性能</td>
+</tr>
+<tr>
+<td align="center">oltp_point_select</td>
+<td align="center">点查性能</td>
+</tr>
+<tr>
+<td align="center">oltp_read_only</td>
+<td align="center">读性能</td>
+</tr>
+<tr>
+<td align="center">oltp_read_write</td>
+<td align="center">读写性能</td>
+</tr>
+<tr>
+<td align="center">oltp_update_index</td>
+<td align="center">有索引情况下更新性能</td>
+</tr>
+<tr>
+<td align="center">oltp_update_non_index</td>
+<td align="center">无索引情况下更新性能</td>
+</tr>
+<tr>
+<td align="center">oltp_write_only</td>
+<td align="center">写性能</td>
+</tr>
+<tr>
+<td align="center">select_random_points</td>
+<td align="center">随机点查</td>
+</tr>
+<tr>
+<td align="center">select_random_ranges</td>
+<td align="center">随机范围查询</td>
+</tr>
+</tbody></table>
+<p><strong>Lua脚本解析</strong><br><code>oltp_common.lua</code></p>
+<p>大部分的脚本都会底层调用<code>oltp_common.lua</code>脚本里的函数<code>stmt_defs</code>的变量</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs sql">#point_selects:主键等值查询<br><span class="hljs-keyword">SELECT</span> c <span class="hljs-keyword">FROM</span> sbtest<span class="hljs-operator">%</span>u <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span>?<br>#simple_ranges:简单范围查询(主键<span class="hljs-keyword">range</span>)<br><span class="hljs-keyword">SELECT</span> c <span class="hljs-keyword">FROM</span> sbtest<span class="hljs-operator">%</span>u <span class="hljs-keyword">WHERE</span> id <span class="hljs-keyword">BETWEEN</span> ? <span class="hljs-keyword">AND</span> ?<br>#sum_ranges:范围求和(简单范围查询的基础上做sum)<br><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">SUM</span>(k) <span class="hljs-keyword">FROM</span> sbtest<span class="hljs-operator">%</span>u <span class="hljs-keyword">WHERE</span> id <span class="hljs-keyword">BETWEEN</span> ? <span class="hljs-keyword">AND</span> ?<br>#order_ranges:简单范围查询(主键<span class="hljs-keyword">range</span>的基础上做排序)<br><span class="hljs-keyword">SELECT</span> c <span class="hljs-keyword">FROM</span> sbtest<span class="hljs-operator">%</span>u <span class="hljs-keyword">WHERE</span> id <span class="hljs-keyword">BETWEEN</span> ? <span class="hljs-keyword">AND</span> ? <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> c<br>#distinct_ranges:去重范围查询(主键<span class="hljs-keyword">range</span> <span class="hljs-operator">+</span> 排序 <span class="hljs-operator">+</span> 去重)<br><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">DISTINCT</span> c <span class="hljs-keyword">FROM</span> sbtest<span class="hljs-operator">%</span>u <span class="hljs-keyword">WHERE</span> id <span class="hljs-keyword">BETWEEN</span> ? <span class="hljs-keyword">AND</span> ? <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> c<br>#index_updates:索引更新操作<br><span class="hljs-keyword">UPDATE</span> sbtest<span class="hljs-operator">%</span>u <span class="hljs-keyword">SET</span> k<span class="hljs-operator">=</span>k<span class="hljs-operator">+</span><span class="hljs-number">1</span> <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span>?<br>#non_index_updates:非索引更新<br><span class="hljs-keyword">UPDATE</span> sbtest<span class="hljs-operator">%</span>u <span class="hljs-keyword">SET</span> c<span class="hljs-operator">=</span>? <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span>?<br>#deletes:删除操作<br><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> sbtest<span class="hljs-operator">%</span>u <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span>?<br>#inserts:插入操作<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> sbtest<span class="hljs-operator">%</span>u (id, k, c, pad) <span class="hljs-keyword">VALUES</span> (?, ?, ?, ?)<br></code></pre></td></tr></table></figure>
+<p><code>oltp_common.lua</code><br>这个脚本相当于一个公共的函数库</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 初始化</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">init</span><span class="hljs-params">()</span></span> <br><span class="hljs-comment">-- 创建表结构，获取c,pad字段随机字符串，插入数据，建立二级索引</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">create_table</span><span class="hljs-params">(drv, con, table_num)</span></span> <br>        <span class="hljs-comment">-- 创建表结构，表结构如下</span><br>        <span class="hljs-comment">-- CREATE TABLE `sbtest1` (</span><br>        <span class="hljs-comment">--         `id` int(11) NOT NULL AUTO_INCREMENT, # 主键</span><br>        <span class="hljs-comment">--         `k` int(11) NOT NULL DEFAULT &#x27;0&#x27;, # 二级索引</span><br>        <span class="hljs-comment">--         `c` char(120) NOT NULL DEFAULT &#x27;&#x27;,</span><br>        <span class="hljs-comment">--         `pad` char(60) NOT NULL DEFAULT &#x27;&#x27;,</span><br>        <span class="hljs-comment">--         PRIMARY KEY (`id`),</span><br>        <span class="hljs-comment">--         KEY `k_1` (`k`)</span><br>        <span class="hljs-comment">--     ) ENGINE=InnoDB AUTO_INCREMENT=1000001 DEFAULT CHARSET=latin1</span><br>        <span class="hljs-comment">-- get_c_value() 获取字段c的值</span><br>        <span class="hljs-comment">-- get_pad_value() 获取字段pad的值</span><br>        <span class="hljs-comment">-- INSERT 语句插入到相关表，直到达到指定的table-size</span><br>        <span class="hljs-comment">-- 建立二级索引k</span><br><span class="hljs-comment">-- 获取字段c的值，返回一个随机字符串</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get_c_value</span><span class="hljs-params">()</span></span> <br><span class="hljs-comment">-- 获取字段pad的值，返回一个随机字符串     </span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get_pad_value</span><span class="hljs-params">()</span></span> <br><span class="hljs-comment">-- 初始化线程          </span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">thread_init</span><span class="hljs-params">()</span></span> <br><span class="hljs-comment">-- 关闭线程连接                   </span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">thread_done</span><span class="hljs-params">()</span></span> <br><span class="hljs-comment">-- Close prepared statements</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">close_statements</span><span class="hljs-params">()</span></span> <br><span class="hljs-comment">-- 如果我们已经重新连接了，那么重新准备语句，                  </span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sysbench.hooks.before_restart_event</span><span class="hljs-params">(errdesc)</span></span><br>    <span class="hljs-comment">-- close_statements() //Close prepared statements</span><br>    <span class="hljs-comment">-- prepare_statements() // This function is a &#x27;callback&#x27; defined by individual benchmark scripts</span><br><span class="hljs-comment">--  构造语句                    </span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepare_for_each_table</span><span class="hljs-params">(key)</span></span>   <br><span class="hljs-comment">-- 对应prepare命令                                    </span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_prepare</span><span class="hljs-params">()</span></span> <br><span class="hljs-comment">-- 对应prewarm命令                                        </span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cmd_prewarm</span><span class="hljs-params">()</span></span> <br><span class="hljs-comment">-- 清理数据,把相关表都DROP掉</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cleanup</span><span class="hljs-params">()</span></span> <br><span class="hljs-comment">-- 启动事务 BEGIN</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepare_begin</span><span class="hljs-params">()</span></span> //构造 BEGIN 语句<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">begin</span><span class="hljs-params">()</span></span> //执行 BEGIN 语句<br><span class="hljs-comment">-- 提交事务 COMMIT</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepare_commit</span><span class="hljs-params">()</span></span> //构造 BEGIN 语句<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">commit</span><span class="hljs-params">()</span></span> //执行 COMMIT 语句<br><span class="hljs-comment">-- 主键等值查询  SELECT c FROM sbtest? WHERE id = ?                                         function prepare_point_selects() // 调用 prepare_for_each_table() 函数生成ponit_selects语句 function execute_point_selects() // 执行 prepare_point_selects() 生成的语句</span><br><span class="hljs-comment">-- 主键范围查询 SELECT c FROM sbtest? WHERE id BETWEEN ? AND ?</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepare_simple_ranges</span><span class="hljs-params">()</span></span> // 调用 prepare_for_each_table() 函数生成simple_ranges语句 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execute_simple_ranges</span><span class="hljs-params">()</span></span> // 执行 prepare_point_selects() 生成的语句 <br><span class="hljs-comment">-- 主键范围查询 + 求和 SELECT SUM(k) FROM sbtest? WHERE id BETWEEN ? AND ?</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepare_sum_ranges</span><span class="hljs-params">()</span></span> // 调用 prepare_for_each_table() 函数生成sum_ranges语句       <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execute_sum_ranges</span><span class="hljs-params">()</span></span> // 执行 prepare_point_selects() 生成的语句                     <br><span class="hljs-comment">-- 主键范围查询 + 排序 SELECT c FROM sbtest%u WHERE id BETWEEN ? AND ? ORDER BY c           function prepare_order_ranges()</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execute_order_ranges</span><span class="hljs-params">()</span></span>                                                           <br><span class="hljs-comment">-- 主键范围查询 + 排序 + 去重 SELECT DISTINCT c FROM sbtest%u WHERE id BETWEEN ? AND ? ORDER BY c</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepare_distinct_ranges</span><span class="hljs-params">()</span></span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execute_distinct_ranges</span><span class="hljs-params">()</span></span>                                                       <br><span class="hljs-comment">-- 二级索引上更新(k是二级索引) UPDATE sbtest%u SET k=k+1 WHERE id=?                           function prepare_index_updates() // 调用 prepare_for_each_table() 函数生成index_updates语句 function execute_index_updates() // 执行 prepare_point_selects() 生成的语句</span><br><span class="hljs-comment">-- 无索引的更新 UPDATE sbtest%u SET c=? WHERE id=?                                         function prepare_non_index_updates() </span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execute_non_index_updates</span><span class="hljs-params">()</span></span>                                                     <br><span class="hljs-comment">-- 删除 DELETE FROM sbtest%u WHERE id=?</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepare_delete_inserts</span><span class="hljs-params">()</span></span>                                                         <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execute_delete_inserts</span><span class="hljs-params">()</span></span> // 执行 prepare_for_each_table 生成的语句<br></code></pre></td></tr></table></figure>
+<p>读写测试的语句格式如下（定义在<code>stmt_defs</code>变量中）</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">--point_selects:主键等值查询</span><br>SELECT c FROM sbtest%u WHERE id=?<br><span class="hljs-comment">-- simple_ranges:简单范围查询(主键range)</span><br>SELECT c FROM sbtest%u WHERE id BETWEEN ? AND ?<br><span class="hljs-comment">-- sum_ranges:范围求和(简单范围查询的基础上做sum)</span><br>SELECT SUM(k) FROM sbtest%u WHERE id BETWEEN ? AND ?<br><span class="hljs-comment">-- order_ranges:简单范围查询(主键range的基础上做排序)</span><br>SELECT c FROM sbtest%u WHERE id BETWEEN ? AND ? ORDER BY c<br><span class="hljs-comment">-- distinct_ranges:去重范围查询(主键range + 排序 + 去重)</span><br>SELECT DISTINCT c FROM sbtest%u WHERE id BETWEEN ? AND ? ORDER BY c<br><span class="hljs-comment">-- index_updates:索引更新操作</span><br>UPDATE sbtest%u SET k=k+<span class="hljs-number">1</span> WHERE id=?<br><span class="hljs-comment">-- non_index_updates:非索引更新</span><br>UPDATE sbtest%u SET c=? WHERE id=?<br><span class="hljs-comment">-- deletes:删除操作</span><br>DELETE FROM sbtest%u WHERE id=?<br><span class="hljs-comment">-- inserts:插入操作</span><br>INSERT INTO sbtest%u (id, k, c, pad) VALUES (?, ?, ?, ?)<br></code></pre></td></tr></table></figure>
+<p>bulk_insert.lua<br>插入的lua脚本</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 初始化线程</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">thread_init</span><span class="hljs-params">()</span></span><br><span class="hljs-comment">-- 准备表结构</span><br>prepare()<br>    <span class="hljs-comment">-- CREATE TABLE IF NOT EXISTS sbtest%d (</span><br>    <span class="hljs-comment">--    id INTEGER NOT NULL,</span><br>    <span class="hljs-comment">--    k INTEGER DEFAULT &#x27;0&#x27; NOT NULL,</span><br>    <span class="hljs-comment">--    PRIMARY KEY (id))]], i)) </span><br><span class="hljs-comment">-- 批量插入</span><br>event()<br><span class="hljs-comment">-- 关闭线程</span><br>thread_done(thread_9d)<br><span class="hljs-comment">-- 清理数据，DROP掉相关的表</span><br>cleanup()<br></code></pre></td></tr></table></figure>
+<p>oltp_delete.lua<br>DELETE语句的lua脚本</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 构造DELETE语句</span><br>prepare_statements()<br>    <span class="hljs-comment">-- prepare_for_each_table(&quot;deletes&quot;) 构造DELETE语句</span><br><span class="hljs-comment">-- 执行DELETE语句</span><br>event()<br></code></pre></td></tr></table></figure>
+<p>oltp_insert.lua<br>INSERT语句的Lua脚本</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 构造DELETE语句</span><br>prepare_statements()<br><span class="hljs-comment">-- 执行DELETE语句</span><br>event()<br></code></pre></td></tr></table></figure>
+<p>oltp_point_select.lua<br>点查语句的Lua脚本，主键查询<code>SELECT c FROM sbtest? WHERE id = ?</code></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本 </span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 构造点查语句</span><br>prepare_statements()<br><span class="hljs-comment">-- 执行语句</span><br>event()<br></code></pre></td></tr></table></figure>
+<p>oltp_read_only.lua<br>只读语句的Lua脚本</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 构造语句</span><br>prepare_statements()<br>  <span class="hljs-comment">-- prepare_point_selects() // 构造点查语句</span><br>  <span class="hljs-comment">-- prepare_begin() // 构造 BEGIN 语句</span><br>  <span class="hljs-comment">-- prepare_commit() // 构造 COMMIT 语句</span><br>  <span class="hljs-comment">-- prepare_simple_ranges() // 构造简单范围查询语句</span><br>  <span class="hljs-comment">-- prepare_sum_ranges() // 构造求和语句</span><br>  <span class="hljs-comment">-- prepare_order_ranges() // 构造排序语句</span><br>  <span class="hljs-comment">-- prepare_distinct_ranges() // 构造排序去重语句</span><br><span class="hljs-comment">-- 执行语句</span><br>event() <br>  <span class="hljs-comment">-- execute_point_selects() // 执行点查语句</span><br>  <span class="hljs-comment">-- execute_simple_ranges() // 执行简单范围查询语句</span><br>  <span class="hljs-comment">-- execute_sum_ranges() // 执行求和语句</span><br>  <span class="hljs-comment">-- execute_order_ranges() // 执行排序语句</span><br>  <span class="hljs-comment">-- execute_distinct_ranges() //排序去重语句</span><br></code></pre></td></tr></table></figure>
+<p>oltp_read_write.lua<br>读写的Lua脚本</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 构造语句</span><br>prepare_statements()<br>  <span class="hljs-comment">-- 读操作</span><br>    <span class="hljs-comment">-- prepare_point_selects() // 构造点查语句</span><br>    <span class="hljs-comment">-- prepare_begin() // 构造 BEGIN 语句</span><br>    <span class="hljs-comment">-- prepare_commit() // 构造 COMMIT 语句</span><br>    <span class="hljs-comment">-- prepare_simple_ranges() // 构造简单范围查询语句</span><br>    <span class="hljs-comment">-- prepare_sum_ranges() // 构造求和语句</span><br>    <span class="hljs-comment">-- prepare_order_ranges() // 构造排序语句</span><br>    <span class="hljs-comment">-- prepare_distinct_ranges() // 构造排序去重语句</span><br>  <span class="hljs-comment">-- 写操作</span><br>    <span class="hljs-comment">-- prepare_index_updates() // 构造更新索引操作语句</span><br>    <span class="hljs-comment">-- prepare_non_index_updates() // 构造更新无索引字段操作语句</span><br>    <span class="hljs-comment">-- prepare_delete_inserts() // 构造删除+更新操作语句</span><br><span class="hljs-comment">-- 执行语句</span><br>event() <br>  <span class="hljs-comment">-- 读操作</span><br>    <span class="hljs-comment">-- execute_point_selects() // 执行点查语句</span><br>    <span class="hljs-comment">-- execute_simple_ranges() // 执行简单范围查询语句</span><br>    <span class="hljs-comment">-- execute_sum_ranges() // 执行求和语句</span><br>    <span class="hljs-comment">-- execute_order_ranges() // 执行排序语句</span><br>    <span class="hljs-comment">-- execute_distinct_ranges() //排序去重语句</span><br>  <span class="hljs-comment">-- 写操作</span><br>    <span class="hljs-comment">-- execute_index_updates() // 执行更新索引操作语句</span><br>    <span class="hljs-comment">-- execute_non_index_updates() // 执行更新无索引字段操作语句</span><br>    <span class="hljs-comment">-- execute_delete_inserts()  // 执行删除+更新操作语句</span><br></code></pre></td></tr></table></figure>
+<p>oltp_update_index.lua<br>更新索引字段操作的Lua语句</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 构造语句</span><br>prepare_statements()<br>  <span class="hljs-comment">-- prepare_index_updates() </span><br><span class="hljs-comment">-- 执行语句</span><br>event() <br>  <span class="hljs-comment">-- execute_index_updates(con)</span><br></code></pre></td></tr></table></figure>
+<p>oltp_update_non_index.lua<br>更新无索引字段操作语句</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 构造语句</span><br>prepare_statements()<br>  <span class="hljs-comment">-- prepare_non_index_updates()</span><br><span class="hljs-comment">-- 执行语句</span><br>event() <br>  <span class="hljs-comment">-- execute_non_index_updates()</span><br></code></pre></td></tr></table></figure>
+<p>oltp_write_only.lua<br>纯写语句的Lua脚本</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 构造语句</span><br>prepare_statements()<br>  <span class="hljs-comment">-- prepare_index_updates()</span><br>  <span class="hljs-comment">-- prepare_non_index_updates()</span><br>  <span class="hljs-comment">-- prepare_delete_inserts()</span><br><span class="hljs-comment">-- 执行语句</span><br>event() <br>  <span class="hljs-comment">-- execute_index_updates()</span><br>  <span class="hljs-comment">-- execute_non_index_updates()</span><br>  <span class="hljs-comment">-- execute_delete_inserts()</span><br></code></pre></td></tr></table></figure>
+<p>select_random_points.lua<br>随机点查脚本</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 准备阶段</span><br>prepare() <br><span class="hljs-comment">-- 线程初始化</span><br>thread_init() <br><span class="hljs-comment">-- 关闭线程</span><br>thread_done() <br><span class="hljs-comment">-- 执行相关SQL</span><br>event()<br></code></pre></td></tr></table></figure>
+<p>select_random_ranges.lua</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 准备阶段</span><br>prepare() <br><span class="hljs-comment">-- 线程初始化</span><br>thread_init() <br><span class="hljs-comment">-- 关闭线程</span><br>thread_done() <br><span class="hljs-comment">-- 执行相关SQL</span><br>event()<br></code></pre></td></tr></table></figure>
+<p>oints.lua<br>随机点查脚本</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 准备阶段</span><br>prepare() <br><span class="hljs-comment">-- 线程初始化</span><br>thread_init() <br><span class="hljs-comment">-- 关闭线程</span><br>thread_done() <br><span class="hljs-comment">-- 执行相关SQL</span><br>event()<br></code></pre></td></tr></table></figure>
+<p>select_random_ranges.lua</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- 加载oltp_common脚本</span><br><span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;oltp_common&quot;</span>)<br><span class="hljs-comment">-- 准备阶段</span><br>prepare() <br><span class="hljs-comment">-- 线程初始化</span><br>thread_init() <br><span class="hljs-comment">-- 关闭线程</span><br>thread_done() <br><span class="hljs-comment">-- 执行相关SQL</span><br>event()<br></code></pre></td></tr></table></figure>
+
+<p>测试例子：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">准备测试脚本</span><br>mysqladmin -hxxx -uxxx -pxxx -P3306 create sbtest;<br><br>sysbench --mysql-host=xxx \<br>         --mysql-port=3306 \<br>         --mysql-user=xxx \<br>         --mysql-password=xxx \<br>         --mysql-db=sbtest \<br>         /usr/share/sysbench/oltp_common.lua \<br>         --tables=10 \<br>         --table_size=100000 \<br>         prepare<br><span class="hljs-meta prompt_">#</span><span class="language-bash">压测脚本</span><br>sysbench --db-driver=mysql --time=30 --threads=5 --report-interval=1 \<br>         --mysql-host=xxx \<br>         --mysql-port=3306 \<br>         --mysql-user=xxx \<br>         --mysql-password=xxx \<br>         --mysql-db=sbtest --tables=10 --table_size=1000000 \<br>         /usr/share/sysbench/oltp_point_select.lua \<br>         --db-ps-mode=disable run<br><span class="hljs-meta prompt_">#</span><span class="language-bash">清理测试数据</span><br>sysbench --db-driver=mysql --time=30 --threads=5 --report-interval=1 \<br>         --mysql-host=xxx \<br>         --mysql-port=3306 \<br>         --mysql-user=xxx \<br>         --mysql-password=xxx \<br>         --mysql-db=sbtest --tables=10 --table_size=1000000 \<br>         oltp_read_only --db-ps-mode=disable cleanup<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%8E%8B%E6%B5%8B%E5%B7%A5%E5%85%B7/" class="category-chain-item">压测工具</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%8B%E6%B5%8B/">#数据库压测</a>
+      
+        <a href="/tags/sysbench/">#sysbench</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MySQl压测工具-sysbench</div>
+      <div>https://blog.wongcw.cn/2022/06/27/MySQl压测工具-sysbench/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>wangcw</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月27日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022020665号
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
