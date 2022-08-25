@@ -1,0 +1,709 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="wangcw">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="分布键调整（包含主键和查询键）创建表、写入数据DROP TABLE IF EXISTS tb_workorderinfo;Create Table tb_workorderinfo ( Id varchar NOT NULL COMMENT &#39;主键(WI)&#39;, AppCode varchar COMMENT &#39;申请编码&#39;, SourceType smallint C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ADB表创建参数及性能优化">
+<meta property="og:url" content="https://blog.wongcw.cn/2021/12/20/ADB%E7%90%9B%E3%84%A5%E5%9E%B1%E5%AF%A4%E5%93%84%E5%BC%AC%E9%8F%81%E6%89%AE%E6%B5%89%E9%8D%8F%E8%99%AB%E2%82%AC%D1%86%E5%85%98%E5%A8%B4%E5%AC%AD%E7%98%AF/index.html">
+<meta property="og:site_name" content="blogwong">
+<meta property="og:description" content="分布键调整（包含主键和查询键）创建表、写入数据DROP TABLE IF EXISTS tb_workorderinfo;Create Table tb_workorderinfo ( Id varchar NOT NULL COMMENT &#39;主键(WI)&#39;, AppCode varchar COMMENT &#39;申请编码&#39;, SourceType smallint C">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-20T10:58:11.000Z">
+<meta property="article:modified_time" content="2022-06-15T00:10:20.000Z">
+<meta property="article:author" content="wangcw">
+<meta property="article:tag" content="ADB">
+<meta property="article:tag" content="结构设计">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>ADB表创建参数及性能优化 - blogwong</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/xiantiao.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/qipao.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/xiaoxuehua.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/daxuehua.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/timeDate.js.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/css/toubudaziji.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.wongcw.cn","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"663d1a6ec35b55e9fe6afb524ef4adaf","google":"GTM-T9V396Z","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?663d1a6ec35b55e9fe6afb524ef4adaf";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'GTM-T9V396Z', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>blogwong</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ADB表创建参数及性能优化"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-12-20 18:58" pubdate>
+          2021年12月20日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          99 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ADB表创建参数及性能优化</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="分布键调整（包含主键和查询键）"><a href="#分布键调整（包含主键和查询键）" class="headerlink" title="分布键调整（包含主键和查询键）"></a>分布键调整（包含主键和查询键）</h2><h3 id="创建表、写入数据"><a href="#创建表、写入数据" class="headerlink" title="创建表、写入数据"></a>创建表、写入数据</h3><p><code>DROP TABLE IF EXISTS tb_workorderinfo;</code><br><code>Create Table tb_workorderinfo (</code><br> <code>Id varchar NOT NULL COMMENT &#39;主键(WI)&#39;,</code><br> <code>AppCode varchar COMMENT &#39;申请编码&#39;,</code><br> <code>SourceType smallint COMMENT &#39;工单来源(0工单下单1智车品2客户接口3LCRM下单4OCRM下单5平安私有云6金融SAAS推送7车务推送)&#39;,</code><br> <code>OrderType varchar COMMENT &#39;工单类型(sys_ordertypeinfo.Code)&#39;,</code><br> <code>CreateType smallint COMMENT &#39;工单建单方式(来源二级分类)(1批量导入)&#39;,</code><br> <code>WorkStatus smallint COMMENT &#39;工单状态(0待提交1正在审核2审核不通过3正在寻找工程师4等待工程师接单5已拒单，重新寻找工程师6等待提交结果7等待客户确认8客户驳回，重新处理9已完成10关闭11质检12质检不通过)&#39;,</code><br> <code>ServiceProviderCode varchar COMMENT &#39;服务供应商Code&#39;,</code><br> <code>CustomerId varchar COMMENT &#39;客户Id&#39;,</code><br> <code>CustomerName varchar COMMENT &#39;客户名称&#39;,</code><br> <code>CustStoreId varchar COMMENT &#39;门店Id&#39;,</code><br> <code>CustStoreName varchar COMMENT &#39;门店名称&#39;,</code><br> <code>CustStoreCode varchar COMMENT &#39;门店Code&#39;,</code><br> <code>PreCustStoreId varchar COMMENT &#39;客户接口下单门店Id&#39;,</code><br> <code>PreCustStoreName varchar COMMENT &#39;客户接口下单门店名称&#39;,</code><br> <code>CustSettleId varchar COMMENT &#39;结算单位Id&#39;,</code><br> <code>CustSettleName varchar COMMENT &#39;结算单位名称&#39;,</code><br> <code>IsCustomer tinyint NOT NULL COMMENT &#39;是否为客户(0否1是)&#39;,</code><br> <code>CustCoopType smallint COMMENT &#39;客户是否有合作商品(1中瑞2非中瑞3中瑞+非中瑞)&#39;,</code><br> <code>ProCode varchar COMMENT &#39;省份Code&#39;,</code><br> <code>ProName varchar COMMENT &#39;省份名称&#39;,</code><br> <code>CityCode varchar COMMENT &#39;城市Code&#39;,</code><br> <code>CityName varchar COMMENT &#39;城市名称&#39;,</code><br> <code>AreaCode varchar COMMENT &#39;地区Code&#39;,</code><br> <code>AreaName varchar COMMENT &#39;地区名称&#39;,</code><br> <code>InstallAddress varchar COMMENT &#39;加装地址&#39;,</code><br> <code>InstallTime datetime COMMENT &#39;加装时间&#39;,</code><br> <code>RequiredTime datetime COMMENT &#39;要求时间&#39;,</code><br> <code>LinkMan varchar COMMENT &#39;联系人姓名&#39;,</code><br> <code>LinkTel varchar COMMENT &#39;联系电话&#39;,</code><br> <code>SecondLinkTel varchar COMMENT &#39;第二联系电话&#39;,</code><br> <code>SecondLinkMan varchar COMMENT &#39;第二联系人&#39;,</code><br> <code>WarehouseId varchar COMMENT &#39;发货一级仓Id&#39;,</code><br> <code>WarehouseName varchar COMMENT &#39;发货一级仓名称&#39;,</code><br> <code>Remark varchar COMMENT &#39;客户备注&#39;,</code><br> <code>IsUrgent tinyint NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;检修工单是否紧急(0否1是)&#39;,</code><br> <code>CustUniqueSign varchar COMMENT &#39;客户唯一标识&#39;,</code><br> <code>CreatePersonCode varchar COMMENT &#39;建单人Code&#39;,</code><br> <code>CreatePersonName varchar COMMENT &#39;建单人姓名&#39;,</code><br> <code>EffectiveTime datetime COMMENT &#39;工单生效时间&#39;,</code><br> <code>EffectiveSuccessfulTime datetime COMMENT &#39;下单成功生效时间&#39;,</code><br> <code>CreatedById varchar COMMENT &#39;&#39;,</code><br> <code>CreatedAt datetime COMMENT &#39;&#39;,</code><br> <code>UpdatedById varchar COMMENT &#39;&#39;,</code><br> <code>UpdatedAt datetime COMMENT &#39;&#39;,</code><br> <code>DeletedById varchar COMMENT &#39;&#39;,</code><br> <code>DeletedAt datetime COMMENT &#39;&#39;,</code><br> <code>Deleted tinyint NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;&#39;,</code><br> <code>primary key (id)</code><br><code>) DISTRIBUTE BY HASH(id) INDEX_ALL=&#39;Y&#39; STORAGE_POLICY=&#39;HOT&#39; BLOCK_SIZE=8192</code><br><code>;</code></p>
+<p><code>DROP TABLE IF EXISTS tb_workcarinfo;</code><br><code>Create Table tb_workcarinfo (</code><br> <code>Id varchar NOT NULL COMMENT &#39;主键(WC)&#39;,</code><br> <code>WorkOrderId varchar COMMENT &#39;工单主单Id(tb_workorderinfo.Id)&#39;,</code><br> <code>VinNumber varchar COMMENT &#39;车架号&#39;,</code><br> <code>PlateNumber varchar COMMENT &#39;车牌号&#39;,</code><br> <code>EngineNumber varchar COMMENT &#39;发动机号&#39;,</code><br> <code>CarModelId varchar COMMENT &#39;车型Id&#39;,</code><br> <code>CarModelName varchar COMMENT &#39;车型名称&#39;,</code><br> <code>CarSeriesId varchar COMMENT &#39;车系Id&#39;,</code><br> <code>CarSeriesName varchar COMMENT &#39;车系名称&#39;,</code><br> <code>CarBrandId varchar COMMENT &#39;车辆品牌Id&#39;,</code><br> <code>CarBrandName varchar COMMENT &#39;车辆品牌名称&#39;,</code><br> <code>CarFullName varchar COMMENT &#39;车型全称&#39;,</code><br> <code>Color varchar COMMENT &#39;车辆颜色&#39;,</code><br> <code>CarPrice decimal(18, 2) COMMENT &#39;车辆价格&#39;,</code><br> <code>IsNewCar smallint COMMENT &#39;车辆类型(0二手车1新车)&#39;,</code><br> <code>CarType smallint COMMENT &#39;车辆类型(1新车2二手车)&#39;,</code><br> <code>UserName varchar COMMENT &#39;车主姓名&#39;,</code><br> <code>UserTel varchar COMMENT &#39;车主联系方式&#39;,</code><br> <code>UserCityCode varchar COMMENT &#39;车主所在城市Code&#39;,</code><br> <code>UserCityName varchar COMMENT &#39;车主所在城市名称&#39;,</code><br> <code>UserAddress varchar COMMENT &#39;车主地址&#39;,</code><br> <code>ShortVin varchar COMMENT &#39;车架号后6位&#39;,</code><br> <code>Remark varchar COMMENT &#39;车辆备注&#39;,</code><br> <code>CreatedById varchar COMMENT &#39;&#39;,</code><br> <code>CreatedAt datetime COMMENT &#39;&#39;,</code><br> <code>UpdatedById varchar COMMENT &#39;&#39;,</code><br> <code>UpdatedAt datetime COMMENT &#39;&#39;,</code><br> <code>DeletedById varchar COMMENT &#39;&#39;,</code><br> <code>DeletedAt datetime COMMENT &#39;&#39;,</code><br> <code>Deleted tinyint NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;&#39;,</code><br> <code>primary key (id)</code><br><code>) DISTRIBUTE BY HASH(id) INDEX_ALL=&#39;Y&#39; STORAGE_POLICY=&#39;HOT&#39; BLOCK_SIZE=8192</code><br><code>;</code></p>
+<p><code>INSERT INTO tb_workorderinfo</code><br><code>SELECT *</code><br><code>FROM ods_serviceordercenter.tb_workorderinfo ;</code></p>
+<p><code>INSERT INTO tb_workcarinfo</code><br><code>SELECT *</code><br><code>FROM ods_serviceordercenter.tb_workcarinfo ;</code></p>
+<h3 id="查询性能"><a href="#查询性能" class="headerlink" title="查询性能"></a>查询性能</h3><p><code>SELECT /*+ filter_not_pushdown_columns=[ods_testcenter.tb_workcarinfo:Deleted|WorkOrderId] */</code> #禁止索引下推，不使用Deleted字段索引，如果不加全部索引的话，这个可以不设置<br><code>a.AppCode,b.VinNumber</code>  #非必要一定不要写 *<br><code>FROM tb_workorderinfo a</code><br><code>LEFT JOIN tb_workcarinfo b</code><br>  <code>ON b.WorkOrderId=a.Id</code><br>  <code>AND b.Deleted=0</code><br><code>WHERE a.Deleted=0</code><br>  <code>AND a.CreatedAt&gt;=&#39;2021-01-01&#39;</code><br><code>LIMIT 100;</code></p>
+<p>800ms左右</p>
+<h3 id="更换分区方式"><a href="#更换分区方式" class="headerlink" title="更换分区方式"></a>更换分区方式</h3><p><code>DROP TABLE IF EXISTS tb_workorderinfo;</code><br><code>Create Table tb_workorderinfo (</code><br> <code>Id varchar NOT NULL COMMENT &#39;主键(WI)&#39;,</code><br> <code>AppCode varchar COMMENT &#39;申请编码&#39;,</code><br> <code>SourceType smallint COMMENT &#39;工单来源(0工单下单1智车品2客户接口3LCRM下单4OCRM下单5平安私有云6金融SAAS推送7车务推送)&#39;,</code><br> <code>OrderType varchar COMMENT &#39;工单类型(sys_ordertypeinfo.Code)&#39;,</code><br> <code>CreateType smallint COMMENT &#39;工单建单方式(来源二级分类)(1批量导入)&#39;,</code><br> <code>WorkStatus smallint COMMENT &#39;工单状态(0待提交1正在审核2审核不通过3正在寻找工程师4等待工程师接单5已拒单，重新寻找工程师6等待提交结果7等待客户确认8客户驳回，重新处理9已完成10关闭11质检12质检不通过)&#39;,</code><br> <code>ServiceProviderCode varchar COMMENT &#39;服务供应商Code&#39;,</code><br> <code>CustomerId varchar COMMENT &#39;客户Id&#39;,</code><br> <code>CustomerName varchar COMMENT &#39;客户名称&#39;,</code><br> <code>CustStoreId varchar COMMENT &#39;门店Id&#39;,</code><br> <code>CustStoreName varchar COMMENT &#39;门店名称&#39;,</code><br> <code>CustStoreCode varchar COMMENT &#39;门店Code&#39;,</code><br> <code>PreCustStoreId varchar COMMENT &#39;客户接口下单门店Id&#39;,</code><br> <code>PreCustStoreName varchar COMMENT &#39;客户接口下单门店名称&#39;,</code><br> <code>CustSettleId varchar COMMENT &#39;结算单位Id&#39;,</code><br> <code>CustSettleName varchar COMMENT &#39;结算单位名称&#39;,</code><br> <code>IsCustomer tinyint NOT NULL COMMENT &#39;是否为客户(0否1是)&#39;,</code><br> <code>CustCoopType smallint COMMENT &#39;客户是否有合作商品(1中瑞2非中瑞3中瑞+非中瑞)&#39;,</code><br> <code>ProCode varchar COMMENT &#39;省份Code&#39;,</code><br> <code>ProName varchar COMMENT &#39;省份名称&#39;,</code><br> <code>CityCode varchar COMMENT &#39;城市Code&#39;,</code><br> <code>CityName varchar COMMENT &#39;城市名称&#39;,</code><br> <code>AreaCode varchar COMMENT &#39;地区Code&#39;,</code><br> <code>AreaName varchar COMMENT &#39;地区名称&#39;,</code><br> <code>InstallAddress varchar COMMENT &#39;加装地址&#39;,</code><br> <code>InstallTime datetime COMMENT &#39;加装时间&#39;,</code><br> <code>RequiredTime datetime COMMENT &#39;要求时间&#39;,</code><br> <code>LinkMan varchar COMMENT &#39;联系人姓名&#39;,</code><br> <code>LinkTel varchar COMMENT &#39;联系电话&#39;,</code><br> <code>SecondLinkTel varchar COMMENT &#39;第二联系电话&#39;,</code><br> <code>SecondLinkMan varchar COMMENT &#39;第二联系人&#39;,</code><br> <code>WarehouseId varchar COMMENT &#39;发货一级仓Id&#39;,</code><br> <code>WarehouseName varchar COMMENT &#39;发货一级仓名称&#39;,</code><br> <code>Remark varchar COMMENT &#39;客户备注&#39;,</code><br> <code>IsUrgent tinyint NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;检修工单是否紧急(0否1是)&#39;,</code><br> <code>CustUniqueSign varchar COMMENT &#39;客户唯一标识&#39;,</code><br> <code>CreatePersonCode varchar COMMENT &#39;建单人Code&#39;,</code><br> <code>CreatePersonName varchar COMMENT &#39;建单人姓名&#39;,</code><br> <code>EffectiveTime datetime COMMENT &#39;工单生效时间&#39;,</code><br> <code>EffectiveSuccessfulTime datetime COMMENT &#39;下单成功生效时间&#39;,</code><br> <code>CreatedById varchar COMMENT &#39;&#39;,</code><br> <code>CreatedAt datetime COMMENT &#39;&#39;,</code><br> <code>UpdatedById varchar COMMENT &#39;&#39;,</code><br> <code>UpdatedAt datetime COMMENT &#39;&#39;,</code><br> <code>DeletedById varchar COMMENT &#39;&#39;,</code><br> <code>DeletedAt datetime COMMENT &#39;&#39;,</code><br> <code>Deleted tinyint NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;&#39;,</code><br> <code>primary key (id,CreatedAt),</code><br>    <code>KEY NON-AppCode (AppCode),</code><br>    <code>KEY NON-OrderType (OrderType),</code><br>    <code>KEY NON-ProCode (ProCode),</code><br>    <code>KEY NON-CustStoreCode (CustStoreCode),</code><br>    <code>KEY NON-CustStoreId (CustStoreId),</code><br>    <code>KEY NON-WorkStatus (WorkStatus),</code><br>    <code>KEY NON-CreatedAt (CreatedAt),</code><br>    <code>KEY NON-CreatePersonName (CreatePersonName),</code><br>    <code>KEY NON-LinkMan (LinkMan),</code><br>    <code>KEY NON-CustomerId (CustomerId),</code><br>    <code>KEY NON-CreateType (CreateType),</code><br>    <code>KEY NON-InstallTime (InstallTime),</code><br>    <code>KEY NON-RequiredTime (RequiredTime),</code><br>    <code>KEY NON-CustomerName (CustomerName),</code><br>    <code>KEY NON-CustSettleId (CustSettleId)</code><br><code>) DISTRIBUTE BY HASH(id)</code><br><code>PARTITION BY VALUE (DATE_FORMAT(CreatedAt,&#39;%Y%m&#39;))  LIFECYCLE 200</code><br><code>STORAGE_POLICY=&#39;MIXED&#39; HOT_PARTITION_COUNT=2</code><br><code>BLOCK_SIZE=8192;</code></p>
+<p><code>DROP TABLE IF EXISTS tb_workcarinfo;</code><br><code>Create Table tb_workcarinfo (</code><br> <code>Id varchar NOT NULL COMMENT &#39;主键(WC)&#39;,</code><br> <code>WorkOrderId varchar COMMENT &#39;工单主单Id(tb_workorderinfo.Id)&#39;,</code><br> <code>VinNumber varchar COMMENT &#39;车架号&#39;,</code><br> <code>PlateNumber varchar COMMENT &#39;车牌号&#39;,</code><br> <code>EngineNumber varchar COMMENT &#39;发动机号&#39;,</code><br> <code>CarModelId varchar COMMENT &#39;车型Id&#39;,</code><br> <code>CarModelName varchar COMMENT &#39;车型名称&#39;,</code><br> <code>CarSeriesId varchar COMMENT &#39;车系Id&#39;,</code><br> <code>CarSeriesName varchar COMMENT &#39;车系名称&#39;,</code><br> <code>CarBrandId varchar COMMENT &#39;车辆品牌Id&#39;,</code><br> <code>CarBrandName varchar COMMENT &#39;车辆品牌名称&#39;,</code><br> <code>CarFullName varchar COMMENT &#39;车型全称&#39;,</code><br> <code>Color varchar COMMENT &#39;车辆颜色&#39;,</code><br> <code>CarPrice decimal(18, 2) COMMENT &#39;车辆价格&#39;,</code><br> <code>IsNewCar smallint COMMENT &#39;车辆类型(0二手车1新车)&#39;,</code><br> <code>CarType smallint COMMENT &#39;车辆类型(1新车2二手车)&#39;,</code><br> <code>UserName varchar COMMENT &#39;车主姓名&#39;,</code><br> <code>UserTel varchar COMMENT &#39;车主联系方式&#39;,</code><br> <code>UserCityCode varchar COMMENT &#39;车主所在城市Code&#39;,</code><br> <code>UserCityName varchar COMMENT &#39;车主所在城市名称&#39;,</code><br> <code>UserAddress varchar COMMENT &#39;车主地址&#39;,</code><br> <code>ShortVin varchar COMMENT &#39;车架号后6位&#39;,</code><br> <code>Remark varchar COMMENT &#39;车辆备注&#39;,</code><br> <code>CreatedById varchar COMMENT &#39;&#39;,</code><br> <code>CreatedAt datetime COMMENT &#39;&#39;,</code><br> <code>UpdatedById varchar COMMENT &#39;&#39;,</code><br> <code>UpdatedAt datetime COMMENT &#39;&#39;,</code><br> <code>DeletedById varchar COMMENT &#39;&#39;,</code><br> <code>DeletedAt datetime COMMENT &#39;&#39;,</code><br> <code>Deleted tinyint NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;&#39;,</code><br> <code>primary key (id,WorkOrderId,CreatedAt),</code><br><code>KEY NON-PlateNumber (PlateNumber),</code><br><code>KEY NON-UserName (UserName),</code><br><code>KEY NON-WorkOrderId (WorkOrderId),</code><br><code>KEY NON-VinNumber (VinNumber),</code><br><code>KEY NON-ShortVin (ShortVin)</code><br><code>) DISTRIBUTE BY HASH(WorkOrderId)</code><br><code>PARTITION BY VALUE (DATE_FORMAT(CreatedAt,&#39;%Y%m&#39;))  LIFECYCLE 200</code><br><code>STORAGE_POLICY=&#39;MIXED&#39; HOT_PARTITION_COUNT=2STORAGE_POLICY=&#39;HOT&#39; BLOCK_SIZE=8192;</code></p>
+<p><code>INSERT INTO tb_workorderinfo</code><br><code>SELECT *</code><br><code>FROM ods_serviceordercenter.tb_workorderinfo ;</code></p>
+<p><code>INSERT INTO tb_workcarinfo</code><br><code>SELECT *</code><br><code>FROM ods_serviceordercenter.tb_workcarinfo ;</code></p>
+<p>可以看出差距不大；</p>
+<p><code>DROP TABLE IF EXISTS tb_alarminfo;</code><br><code>CREATE TABLE tb_alarminfo (</code><br>  <code>Id varchar COMMENT &#39;主键(AI)&#39;,</code><br>  <code>CarId varchar COMMENT &#39;车辆Id&#39;,</code><br>  <code>DeviceId varchar COMMENT &#39;设备Id&#39;,</code><br>  <code>DeviceNumber varchar COMMENT &#39;设备号&#39;,</code><br>  <code>AlarmType smallint COMMENT &#39;预警类型:1 光敏;2 断电;3 翻转;4 伪基站;5 SOS;6 急加速;7 急减速;8 急转弯;9 震动;10 碰撞;11 电瓶低电压;12 硬件超速预警;13 事故预警;14 摔车报警;15 倾倒预警&#39;,</code><br>  <code>DeviceLat decimal(11,8) COMMENT &#39;原始纬度&#39;,</code><br>  <code>DeviceLng decimal(11,8) COMMENT &#39;原始经度&#39;,</code><br>  <code>Speed decimal(10,2) COMMENT &#39;速度&#39;,</code><br>  <code>FaultCode varchar COMMENT &#39;故障码&#39;,</code><br>  <code>AlarmAmount int COMMENT &#39;当前预警次数&#39;,</code><br>  <code>AlarmTime datetime COMMENT &#39;预警时间&#39;,</code><br>  <code>IsRead tinyint(1) DEFAULT &#39;0&#39; COMMENT &#39;是否已读: 0 否;1 是&#39;,</code><br>  <code>IsSend tinyint(1) DEFAULT &#39;0&#39; COMMENT &#39;是否推送:0 否;1 是&#39;,</code><br>  <code>IsFrozen tinyint(1) NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;是否冻结:0 否(最新版本);1 是(历史版本)&#39;,</code><br>  <code>InsertTime datetime DEFAULT NULL COMMENT &#39;预警生成时间&#39;,</code><br>  <code>Deleted tinyint(1) DEFAULT &#39;0&#39; COMMENT &#39;是否删除:0 否;1 是&#39;,</code><br>  <code>PRIMARY KEY (Id,CarId,AlarmTime),</code><br>  <code>KEY NON-AlarmType (AlarmType),</code><br>  <code>KEY NON-DeviceNumber (DeviceNumber),</code><br>  <code>KEY NON-IsRead (IsRead),</code><br>  <code>KEY NON-IsSend (IsSend),</code><br>  <code>KEY NON-DeviceId (DeviceId),</code><br>  <code>KEY NON-IsFrozen (IsFrozen),</code><br>  <code>KEY NON-InsertTime (InsertTime),</code><br>  <code>KEY NON-AlarmTime (AlarmTime)</code><br><code>) COMMENT=&#39;预警域_硬件预警记录&#39;</code><br><code>DISTRIBUTE BY HASH(CarId)</code><br><code>PARTITION BY VALUE (DATE_FORMAT(AlarmTime,&#39;%Y%m&#39;))  LIFECYCLE 200</code><br><code>STORAGE_POLICY=&#39;MIXED&#39; HOT_PARTITION_COUNT=3 BLOCK_SIZE=8192;</code></p>
+<p><code>DROP TABLE IF EXISTS tb_distalarminfo;</code><br><code>CREATE TABLE tb_distalarminfo (</code><br>  <code>Id varchar COMMENT &#39;主键(DA)倒序&#39;,</code><br>  <code>CarId varchar COMMENT &#39;车辆Id&#39;,</code><br>  <code>DeviceId varchar COMMENT &#39;设备Id&#39;,</code><br>  <code>DeviceNumber varchar COMMENT &#39;设备号&#39;,</code><br>  <code>AlarmGrade smallint COMMENT &#39;危险等级:0 安全;1 低(跨市);2 中(跨省);3 高(跨国)&#39;,</code><br>  <code>DeviceLat decimal(11,8) COMMENT &#39;原始纬度&#39;,</code><br>  <code>Devicelng decimal(11,8) COMMENT &#39;原始经度&#39;,</code><br>  <code>AlarmTime datetime COMMENT &#39;预警时间&#39;,</code><br>  <code>SafeProCode varchar COMMENT &#39;安全省份Code&#39;,</code><br>  <code>SafeCityCode varchar COMMENT &#39;安全城市Code&#39;,</code><br>  <code>NowProCode varchar COMMENT &#39;目前省份Code&#39;,</code><br>  <code>NowCityCode varchar COMMENT &#39;目前城市Code&#39;,</code><br>  <code>AlarmAmount int COMMENT &#39;当前预警次数&#39;,</code><br>  <code>UnAlarmAmount int COMMENT &#39;当前解除预警次数&#39;,</code><br>  <code>IsAlarm tinyint(1) DEFAULT &#39;1&#39; COMMENT &#39;是否报警:0 解除报警;1 报警&#39;,</code><br>  <code>IsRead tinyint(1) DEFAULT &#39;0&#39; COMMENT &#39;是否已读:0 否;1 是&#39;,</code><br>  <code>IsSend tinyint(1) DEFAULT &#39;0&#39; COMMENT &#39;是否推送:0 否;1 是&#39;,</code><br>  <code>IsFrozen tinyint(1) NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;是否冻结:0 否(最新数据);1 是(历史数据)&#39;,</code><br>  <code>InsertTime datetime COMMENT &#39;预警生成时间&#39;,</code><br>  <code>Deleted tinyint(1) DEFAULT &#39;0&#39; COMMENT &#39;是否删除:0 否;1 是&#39;,</code><br>  <code>PRIMARY KEY (Id,CarId,AlarmTime),</code><br>  <code>KEY NON-DeviceNumber (DeviceNumber),</code><br>  <code>KEY NON-AlarmGrade (AlarmGrade),</code><br>  <code>KEY NON-IsFrozen (IsFrozen),</code><br>  <code>KEY NON-IsSend (IsSend),</code><br>  <code>KEY NON-DeviceId (DeviceId),</code><br>  <code>KEY NON-AlarmTime (AlarmTime),</code><br>  <code>KEY NON-SafeCityCode (SafeCityCode),</code><br>  <code>KEY NON-NowCityCode (NowCityCode),</code><br>  <code>KEY NON-SafeProCode (SafeProCode),</code><br>  <code>KEY NON-NowProCode (NowProCode)</code><br><code>) COMMENT=&#39;预警域_跨区预警信息&#39;</code><br><code>DISTRIBUTE BY HASH(CarId)</code><br><code>PARTITION BY VALUE (DATE_FORMAT(AlarmTime,&#39;%Y%m&#39;))  LIFECYCLE 200</code><br><code>STORAGE_POLICY=&#39;MIXED&#39; HOT_PARTITION_COUNT=3 BLOCK_SIZE=8192;</code></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/AnalyticDB/" class="category-chain-item">AnalyticDB</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ADB/">#ADB</a>
+      
+        <a href="/tags/%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1/">#结构设计</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ADB表创建参数及性能优化</div>
+      <div>https://blog.wongcw.cn/2021/12/20/ADB琛ㄥ垱寤哄弬鏁扮浉鍏虫€ц兘娴嬭瘯/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>wangcw</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年12月20日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022020665号
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
