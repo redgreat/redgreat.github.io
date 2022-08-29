@@ -69,11 +69,6 @@
 
 
   
-<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/xiantiao.js.css">
-<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/qipao.js.css">
-<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/xiaoxuehua.js.css">
-<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/daxuehua.js.css">
-<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/timeDate.js.css">
 <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/css/toubudaziji.css">
 
 
@@ -556,7 +551,7 @@
     <div class="footer-inner">
   
     <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-love"></i> <a href="https://blog.wongcw.cn" target="_blank"> <script>document.write("Copyright © wangcw 2020-" + new Date().getFullYear() + " All Rights Reserved") </script> </a> 
+       <script>document.write("Copyright © wangcw 2020-" + new Date().getFullYear() + " All Rights Reserved") </script> <i class="iconfont icon-love"></i> <span id="timeDate"></span> <span id="times"></span> <script> var now = new Date(); function createtime() {  var grt= new Date("01/01/2022 00:00:00"); new Date().setTime(new Date().getTime()+250);  days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);  hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);  if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);  mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}  seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);  snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}  document.getElementById("timeDate").innerHTML = "本站已各种夹缝中安全运行 "+dnum+" 天 ";  document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; } setInterval("createtime()",250) </script> 
     </div>
   
   
@@ -717,6 +712,11 @@
   <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
+
+
+  
+<script src="/js/xiantiao.js"></script>
+<script src="/js/xiaoxuehua.js"></script>
 
 
 
