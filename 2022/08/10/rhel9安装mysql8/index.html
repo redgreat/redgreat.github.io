@@ -16,23 +16,25 @@
   <meta name="author" content="wangcw">
   <meta name="keywords" content="">
   
-    <meta name="description" content="rhel9安装部署mysql8 安装前准备CRT连接123456789vim &#x2F;etc&#x2F;ssh&#x2F;sshd_configLoginGraceTime 0PermitRootLogin yesStrictModes yesUseDNS noMaxSessions 50#重启 sshd 服务systemctl restart sshd.service 主机名、时区12345timedatectl set">
+    <meta name="description" content="安装前准备CRT连接123456789vim &#x2F;etc&#x2F;ssh&#x2F;sshd_configLoginGraceTime 0PermitRootLogin yesStrictModes yesUseDNS noMaxSessions 50#重启 sshd 服务systemctl restart sshd.service 主机名、时区12345timedatectl set-timezone &quot;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="blogwong">
-<meta property="og:url" content="https://blog.wongcw.cn/2022/08/25/rhel9%E5%AE%89%E8%A3%85mysql8/index.html">
+<meta property="og:title" content="rhel9安装部署mysql8">
+<meta property="og:url" content="https://blog.wongcw.cn/2022/08/10/rhel9%E5%AE%89%E8%A3%85mysql8/index.html">
 <meta property="og:site_name" content="blogwong">
-<meta property="og:description" content="rhel9安装部署mysql8 安装前准备CRT连接123456789vim &#x2F;etc&#x2F;ssh&#x2F;sshd_configLoginGraceTime 0PermitRootLogin yesStrictModes yesUseDNS noMaxSessions 50#重启 sshd 服务systemctl restart sshd.service 主机名、时区12345timedatectl set">
+<meta property="og:description" content="安装前准备CRT连接123456789vim &#x2F;etc&#x2F;ssh&#x2F;sshd_configLoginGraceTime 0PermitRootLogin yesStrictModes yesUseDNS noMaxSessions 50#重启 sshd 服务systemctl restart sshd.service 主机名、时区12345timedatectl set-timezone &quot;">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-08-25T03:31:38.543Z">
-<meta property="article:modified_time" content="2022-08-17T02:52:29.634Z">
+<meta property="article:published_time" content="2022-08-10T09:23:11.000Z">
+<meta property="article:modified_time" content="2022-08-29T07:28:41.252Z">
 <meta property="article:author" content="wangcw">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="自建数据库">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>blogwong</title>
+  <title>rhel9安装部署mysql8 - blogwong</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +248,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text=""></span>
+            <span id="subtitle" data-typed-text="rhel9安装部署mysql8"></span>
           
         </div>
 
@@ -257,8 +259,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-08-25 11:31" pubdate>
-          2022年8月25日 中午
+        <time datetime="2022-08-10 17:23" pubdate>
+          2022年8月10日 下午
         </time>
       </span>
     
@@ -326,13 +328,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none"></h1>
+            <h1 style="display: none">rhel9安装部署mysql8</h1>
             
             
               <div class="markdown-body">
                 
-                <p>rhel9安装部署mysql8</p>
-<h3 id="安装前准备"><a href="#安装前准备" class="headerlink" title="安装前准备"></a>安装前准备</h3><h4 id="CRT连接"><a href="#CRT连接" class="headerlink" title="CRT连接"></a>CRT连接</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">vim</span> /etc/ssh/sshd_config<br>LoginGraceTime <span class="hljs-number">0</span><br>PermitRootLogin <span class="hljs-literal">yes</span><br>StrictModes <span class="hljs-literal">yes</span><br>UseDNS <span class="hljs-literal">no</span><br>MaxSessions <span class="hljs-number">50</span><br><br><span class="hljs-comment">#重启 sshd 服务</span><br>systemctl restart sshd.service<br></code></pre></td></tr></table></figure>
+                <h3 id="安装前准备"><a href="#安装前准备" class="headerlink" title="安装前准备"></a>安装前准备</h3><h4 id="CRT连接"><a href="#CRT连接" class="headerlink" title="CRT连接"></a>CRT连接</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">vim</span> /etc/ssh/sshd_config<br>LoginGraceTime <span class="hljs-number">0</span><br>PermitRootLogin <span class="hljs-literal">yes</span><br>StrictModes <span class="hljs-literal">yes</span><br>UseDNS <span class="hljs-literal">no</span><br>MaxSessions <span class="hljs-number">50</span><br><br><span class="hljs-comment">#重启 sshd 服务</span><br>systemctl restart sshd.service<br></code></pre></td></tr></table></figure>
 <h4 id="主机名、时区"><a href="#主机名、时区" class="headerlink" title="主机名、时区"></a>主机名、时区</h4><figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig"><span class="hljs-string">timedatectl</span> <span class="hljs-built_in">set-timezone</span> <span class="hljs-string">&quot;Asia/Shanghai&quot;</span> <br><span class="hljs-string">timedatectl</span> <span class="hljs-string">status</span>|<span class="hljs-string">grep</span> <span class="hljs-string">Local</span><br><span class="hljs-string">hostnamectl</span> <span class="hljs-built_in">set-hostname</span> <span class="hljs-string">rhel9</span><br><span class="hljs-string">vim</span> /<span class="hljs-string">etc</span>/<span class="hljs-string">hostname</span><br><span class="hljs-string">10</span>.<span class="hljs-string">16</span>.<span class="hljs-string">2</span>.<span class="hljs-string">58</span> <span class="hljs-string">rhel9</span><br></code></pre></td></tr></table></figure>
 <h4 id="检查系统环境"><a href="#检查系统环境" class="headerlink" title="检查系统环境"></a>检查系统环境</h4><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-comment">#硬件</span><br>dmidecode |<span class="hljs-keyword">grep</span> Name<br><span class="hljs-comment">#内存</span><br>dmidecode|<span class="hljs-keyword">grep</span> -A5 <span class="hljs-string">&quot;Memory Device&quot;</span>|<span class="hljs-keyword">grep</span> Size|<span class="hljs-keyword">grep</span> -v No |<span class="hljs-keyword">grep</span> -v Range<br><span class="hljs-comment">#swap</span><br><span class="hljs-keyword">grep</span> SwapTotal /proc/meminfo | awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span><br><span class="hljs-comment">#内存大小</span><br>free -m<br><span class="hljs-comment">#磁盘空间</span><br>df -hT<br></code></pre></td></tr></table></figure>
 
@@ -396,6 +397,43 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/" class="category-chain-item">MySQL</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+        <a href="/tags/%E8%87%AA%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93/">#自建数据库</a>
+      
+    </div>
   
 </div>
 
@@ -405,8 +443,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div></div>
-      <div>https://blog.wongcw.cn/2022/08/25/rhel9安装mysql8/</div>
+      <div>rhel9安装部署mysql8</div>
+      <div>https://blog.wongcw.cn/2022/08/10/rhel9安装mysql8/</div>
     </div>
     <div class="license-meta">
       
@@ -418,7 +456,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年8月25日</div>
+          <div>2022年8月10日</div>
         </div>
       
       
