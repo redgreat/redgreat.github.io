@@ -1,0 +1,770 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="wangcw">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="又一款数据库压测工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库压测工具HannerDB">
+<meta property="og:url" content="https://blog.wongcw.cn/2022/09/19/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%8B%E6%B5%8B%E5%B7%A5%E5%85%B7hammerDB/index.html">
+<meta property="og:site_name" content="blogwong">
+<meta property="og:description" content="又一款数据库压测工具">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/bcaaa31f8a517cded7e1635780f14750.clipboard-2022-09-19.png">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/9e2b3e4433997aa3885f0cc79d3ab602.clipboard-2022-09-19.png">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/e3acd24e2e38a82e175fded70f2534d9.clipboard-2022-09-19.png">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/cc1cd4ffce8dbacb52bb812e9fb1e8e8.clipboard-2022-09-19.png">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/37b83dc9f3e9f34f42c73023ef3a5655.clipboard-2022-09-19.png">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/6683108eb0b2fbe40c8a66fd95c27c73.clipboard-2022-09-19.png">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/81a0fd6c4a531b4b8d898aa746d5b1b3.clipboard-2022-09-19.png">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/9a12fbe882debd107f30930eb16092d6.clipboard-2022-09-19.png">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/a30451050547b1910b1b9097d7735b3a.clipboard-2022-09-19.png">
+<meta property="og:image" content="https://www.wongcw.cn/static/img/6100988b30e823d6dd0bdf3a5ee8b412.clipboard-2022-09-19.png">
+<meta property="article:published_time" content="2022-09-18T23:26:11.000Z">
+<meta property="article:modified_time" content="2022-09-19T02:48:17.358Z">
+<meta property="article:author" content="wangcw">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.wongcw.cn/static/img/bcaaa31f8a517cded7e1635780f14750.clipboard-2022-09-19.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>数据库压测工具HannerDB - blogwong</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/css/toubudaziji.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.wongcw.cn","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"663d1a6ec35b55e9fe6afb524ef4adaf","google":"GTM-T9V396Z","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?663d1a6ec35b55e9fe6afb524ef4adaf";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'GTM-T9V396Z', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>blogwong</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="数据库压测工具HannerDB"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-19 07:26" pubdate>
+          2022年9月19日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据库压测工具HannerDB</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>又一款数据库压测工具</p>
+<span id="more"></span>
+
+<p>上次因公司业务需要使用新数据库，为保持换上之后业务稳定运行，需要压测对比结果，找了两款并没很好的测出想要的统一对比指标，偶尔发现这款数据库压测工具，方便好用。</p>
+<p><a target="_blank" rel="noopener" href="https://www.hammerdb.com/">软件官网</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/TPC-Council/HammerDB">GitHub</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/index.html">标准官方文档</a>，内容相当丰富</p>
+<p>支持win和linux平台，支持<a target="_blank" rel="noopener" href="https://github.com/webysther/hammerdb-docker">docker部署</a>，linux和docker最终还是需要界面展示(xwindow等)支持，所以这里干脆直接用win版测试，如果需要测试的数据库服务只有内网环境，又没有可以用来测试的win服务器，用后面两种比较合适。</p>
+<p>支持压测数据库类型：MySQL，MariaDB，PostgreSQL，Redis，MSSQLServer，Oracle.Db2</p>
+<p>这里只压测MySQL做为测试。</p>
+<p>压测不同类型数据库，需要有统一的测试指标吧，运行同样的SQL，同等数据量，同等并发、用户量等，这里介绍下测试基准 TPC比较重要的两项：</p>
+<blockquote>
+<p><strong>TPC-C:</strong></p>
+<p>TPC Benchmark C于1992年7月获得批准，是一个在线事务处理（OLTP）基准。 与TPC-A等以前的OLTP基准测试相比，TPC-C更复杂，因为它具有多种事务类型，更复杂的数据库和整体执行结构。 TPC-C涉及五个不同类型和复&gt; 杂性的并发事务的混合，这些事务可以在线执行或排队等待延迟执行。 该数据库由九种类型的表组成，具有广泛的记录和人口规模。 TPC-C以每分钟事务数（tpmC）衡量。 虽然基准描述了批发供应商的活动，但TPC-C并不限于任何特定业务领域的活动，而是代表必须管理，销售或分销产品或服务的任何行业。<br>百科介绍：<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/TPCC/10023747?fr=aladdin">https://baike.baidu.com/item/TPCC/10023747?fr=aladdin</a></p>
+<p><strong>TPC-H:</strong></p>
+<p>TPC Benchmark™H（TPC-H）是决策支持基准。 它由一套面向业务的即时查询（ad-hoc）和并发数据修改组成。 选择查询和填充数据库的数据具有广泛的行业相关性。 该基准测试说明了决策支持系统，该系统可检查大量数&gt; 据，执行高度复杂的查询并为关键业务问题提供答案。 TPC-H报告的性能指标称为TPC-H每小时综合查询性能指标（QphH @ Size），它反映了系统处理查询能力的多个方面。 这些方面包括执行查询时所选择的数据库大小，单&gt; 个流提交查询时的查询处理能力以及多个并发用户提交查询时的查询吞吐量。 TPC-H价格/性能指标</p>
+<p>TPC-H是一款面向商品零售业的决策支持系统测试基准，它定义了8张表，22个查询，遵循SQL92；TPC-H基准的数据库模式遵循第三范式。新兴的数据仓库开始采用新的模型，如星型模型、雪花模型。TPC-H已经不能精准反映当&gt; 今数据库系统的真实性能。为此，TPC组织推出了新一代的面向决策应用的TPC-DS 基准。</p>
+</blockquote>
+<p>TPC还有一系列的针对不同业务场景测试基准，<a target="_blank" rel="noopener" href="https://www.tpc.org/tpcc/">TPC官网</a>可以看到定义：</p>
+<p><img src="https://www.wongcw.cn/static/img/bcaaa31f8a517cded7e1635780f14750.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p>由于TPC定义的测试基准比较复杂，这里HammerDB的 <a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch03s03.html">TPROC-C</a>、<a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch11s01.html">TPROC-H</a> 基准都是TPC基准上为更方便测试、更低的成本实现的。</p>
+<p><img src="https://www.wongcw.cn/static/img/9e2b3e4433997aa3885f0cc79d3ab602.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p>了解了上面的测试基准，才能更好的输入测试参数来达到真实模拟测试效果以及每个输入。</p>
+<h2 id="Building-the-Schema"><a href="#Building-the-Schema" class="headerlink" title="Building the Schema"></a><a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch02s01.html">Building the Schema</a></h2><h3 id="建立数据库连接"><a href="#建立数据库连接" class="headerlink" title="建立数据库连接"></a>建立数据库连接</h3><p><img src="https://www.wongcw.cn/static/img/e3acd24e2e38a82e175fded70f2534d9.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p>这里的虚拟用户 VisualUser 数量，等实际压测结果会比设定的多一个。注意用户一定要有建库建表权限。</p>
+<h3 id="建库、建表、建立测试数据"><a href="#建库、建表、建立测试数据" class="headerlink" title="建库、建表、建立测试数据"></a>建库、建表、建立测试数据</h3><p><img src="https://www.wongcw.cn/static/img/cc1cd4ffce8dbacb52bb812e9fb1e8e8.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p>点机开始之后，这里可以看到每个用户进程正在执行的事务</p>
+<p><img src="https://www.wongcw.cn/static/img/37b83dc9f3e9f34f42c73023ef3a5655.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p>这里可以看到创建 Warehouse 的 tpm</p>
+<p><img src="https://www.wongcw.cn/static/img/6683108eb0b2fbe40c8a66fd95c27c73.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p>创建成功</p>
+<p><img src="https://www.wongcw.cn/static/img/81a0fd6c4a531b4b8d898aa746d5b1b3.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据大佬给的脚本可以看到创建成功后的库数据</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">select</span> a.<span class="hljs-built_in">SCHEMA_NAME</span>, a.DEFAULT_CHARACTER_SET_NAME,a.DEFAULT_COLLATION_NAME,<br>sum(table_rows) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;记录数&#x27;</span>,<br>sum(<span class="hljs-keyword">truncate</span>(data_length/<span class="hljs-number">1024</span>/<span class="hljs-number">1024</span>, <span class="hljs-number">2</span>)) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;数据容量(MB)&#x27;</span>,<br>sum(<span class="hljs-keyword">truncate</span>(index_length/<span class="hljs-number">1024</span>/<span class="hljs-number">1024</span>, <span class="hljs-number">2</span>)) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;索引容量(MB)&#x27;</span>,<br>sum(<span class="hljs-keyword">truncate</span>((data_length+index_length)/<span class="hljs-number">1024</span>/<span class="hljs-number">1024</span>, <span class="hljs-number">2</span>)) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;总大小(MB)&#x27;</span>,<br>sum(<span class="hljs-keyword">truncate</span>(max_data_length/<span class="hljs-number">1024</span>/<span class="hljs-number">1024</span>, <span class="hljs-number">2</span>)) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;最大值(MB)&#x27;</span>,<br>sum(<span class="hljs-keyword">truncate</span>(data_free/<span class="hljs-number">1024</span>/<span class="hljs-number">1024</span>, <span class="hljs-number">2</span>)) <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;空闲空间(MB)&#x27;</span><br><span class="hljs-keyword">from</span> INFORMATION_SCHEMA.SCHEMATA a<br><span class="hljs-keyword">left outer join</span> information_schema.<span class="hljs-keyword">tables</span> b<br><span class="hljs-keyword">on</span> a.<span class="hljs-built_in">SCHEMA_NAME</span>=b.TABLE_SCHEMA<br><span class="hljs-keyword">where</span> a.<span class="hljs-built_in">SCHEMA_NAME</span>=<span class="hljs-string">&#x27;tpcc&#x27;</span><br><span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> a.<span class="hljs-built_in">SCHEMA_NAME</span>, a.DEFAULT_CHARACTER_SET_NAME,a.DEFAULT_COLLATION_NAME<br><span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> sum(data_length) <span class="hljs-keyword">desc</span>, sum(index_length) <span class="hljs-keyword">desc</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="查看服务器主机性能"><a href="#查看服务器主机性能" class="headerlink" title="查看服务器主机性能"></a>查看服务器主机性能</h3><p>这里用了htop , 可以用其他工具</p>
+<p><img src="https://www.wongcw.cn/static/img/9a12fbe882debd107f30930eb16092d6.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Run-a-Test-Workload"><a href="#Run-a-Test-Workload" class="headerlink" title="Run a Test Workload"></a><a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch02s02.html">Run a Test Workload</a></h2><h3 id="开启正儿八经压测"><a href="#开启正儿八经压测" class="headerlink" title="开启正儿八经压测"></a>开启正儿八经压测</h3><p><img src="https://www.wongcw.cn/static/img/a30451050547b1910b1b9097d7735b3a.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p>两个选项，分别对应直接跑完脚本，一个是跑固定时间结束，选完之后点击Load加载脚本，点击Run Virtual Users 图标开始测试，我的虚拟机性能不高，这个测试客户端已经卡的不行了，但服务器性资源占用倒不高。虚拟用户创建可以在Driver Script 下面的菜单新建。</p>
+<p><img src="https://www.wongcw.cn/static/img/6100988b30e823d6dd0bdf3a5ee8b412.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p>官网最新win版压测MySQL驱动会有些问题，据说是Tcl的版本与MySQL驱动依赖包版本不对应，需要更换MySQL驱动dll,  HammerDB-4.5\lib\mysqltcl3.052\libmysql.dll，报错界面忘记截图，具体下载位置自行百度。后来发现<a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch01s10.html#d0e628">HammerDB官方文档</a>已经写的很清楚了。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%8B%E6%B5%8B/" class="category-chain-item">数据库压测</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>数据库压测工具HannerDB</div>
+      <div>https://blog.wongcw.cn/2022/09/19/数据库压测工具hammerDB/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>wangcw</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月19日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'redgreat/redgreat.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <script>document.write("Copyright © wangcw 2020-" + new Date().getFullYear() + " All Rights Reserved") </script> <i class="iconfont icon-love"></i> <span id="timeDate"></span> <span id="times"></span> <script> var now = new Date(); function createtime() {  var grt= new Date("01/01/2022 00:00:00"); new Date().setTime(new Date().getTime()+250);  days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);  hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);  if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);  mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}  seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);  snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}  document.getElementById("timeDate").innerHTML = "本站已各种夹缝中安全运行 "+dnum+" 天 ";  document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; } setInterval("createtime()",250) </script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022020665号
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/xiantiao.js"></script>
+<script src="/js/xiaoxuehua.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
