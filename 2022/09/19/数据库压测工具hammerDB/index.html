@@ -34,9 +34,10 @@
 <meta property="og:image" content="https://www.wongcw.cn/static/img/a30451050547b1910b1b9097d7735b3a.clipboard-2022-09-19.png">
 <meta property="og:image" content="https://www.wongcw.cn/static/img/6100988b30e823d6dd0bdf3a5ee8b412.clipboard-2022-09-19.png">
 <meta property="article:published_time" content="2022-09-18T23:26:11.000Z">
-<meta property="article:modified_time" content="2022-09-19T02:48:17.358Z">
+<meta property="article:modified_time" content="2022-09-19T03:48:47.421Z">
 <meta property="article:author" content="wangcw">
 <meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="数据库压测">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.wongcw.cn/static/img/bcaaa31f8a517cded7e1635780f14750.clipboard-2022-09-19.png">
   
@@ -341,7 +342,7 @@
                 <p>又一款数据库压测工具</p>
 <span id="more"></span>
 
-<p>上次因公司业务需要使用新数据库，为保持换上之后业务稳定运行，需要压测对比结果，找了两款并没很好的测出想要的统一对比指标，偶尔发现这款数据库压测工具，方便好用。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>上次因公司业务需要使用新数据库，为保持换上之后业务稳定运行，需要压测对比结果，找了两款并没很好的测出想要的统一对比指标，偶尔发现这款数据库压测工具，方便好用。</p>
 <p><a target="_blank" rel="noopener" href="https://www.hammerdb.com/">软件官网</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/TPC-Council/HammerDB">GitHub</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/index.html">标准官方文档</a>，内容相当丰富</p>
@@ -349,7 +350,7 @@
 <p>支持压测数据库类型：MySQL，MariaDB，PostgreSQL，Redis，MSSQLServer，Oracle.Db2</p>
 <p>这里只压测MySQL做为测试。</p>
 <p>压测不同类型数据库，需要有统一的测试指标吧，运行同样的SQL，同等数据量，同等并发、用户量等，这里介绍下测试基准 TPC比较重要的两项：</p>
-<blockquote>
+<h2 id="压测基准"><a href="#压测基准" class="headerlink" title="压测基准"></a>压测基准</h2><blockquote>
 <p><strong>TPC-C:</strong></p>
 <p>TPC Benchmark C于1992年7月获得批准，是一个在线事务处理（OLTP）基准。 与TPC-A等以前的OLTP基准测试相比，TPC-C更复杂，因为它具有多种事务类型，更复杂的数据库和整体执行结构。 TPC-C涉及五个不同类型和复&gt; 杂性的并发事务的混合，这些事务可以在线执行或排队等待延迟执行。 该数据库由九种类型的表组成，具有广泛的记录和人口规模。 TPC-C以每分钟事务数（tpmC）衡量。 虽然基准描述了批发供应商的活动，但TPC-C并不限于任何特定业务领域的活动，而是代表必须管理，销售或分销产品或服务的任何行业。<br>百科介绍：<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/TPCC/10023747?fr=aladdin">https://baike.baidu.com/item/TPCC/10023747?fr=aladdin</a></p>
 <p><strong>TPC-H:</strong></p>
@@ -361,7 +362,8 @@
 <p>由于TPC定义的测试基准比较复杂，这里HammerDB的 <a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch03s03.html">TPROC-C</a>、<a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch11s01.html">TPROC-H</a> 基准都是TPC基准上为更方便测试、更低的成本实现的。</p>
 <p><img src="https://www.wongcw.cn/static/img/9e2b3e4433997aa3885f0cc79d3ab602.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
 <p>了解了上面的测试基准，才能更好的输入测试参数来达到真实模拟测试效果以及每个输入。</p>
-<h2 id="Building-the-Schema"><a href="#Building-the-Schema" class="headerlink" title="Building the Schema"></a><a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch02s01.html">Building the Schema</a></h2><h3 id="建立数据库连接"><a href="#建立数据库连接" class="headerlink" title="建立数据库连接"></a>建立数据库连接</h3><p><img src="https://www.wongcw.cn/static/img/e3acd24e2e38a82e175fded70f2534d9.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="开测"><a href="#开测" class="headerlink" title="开测"></a>开测</h2><p><strong><a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch02s01.html">Building the Schema</a></strong></p>
+<h3 id="建立数据库连接"><a href="#建立数据库连接" class="headerlink" title="建立数据库连接"></a>建立数据库连接</h3><p><img src="https://www.wongcw.cn/static/img/e3acd24e2e38a82e175fded70f2534d9.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里的虚拟用户 VisualUser 数量，等实际压测结果会比设定的多一个。注意用户一定要有建库建表权限。</p>
 <h3 id="建库、建表、建立测试数据"><a href="#建库、建表、建立测试数据" class="headerlink" title="建库、建表、建立测试数据"></a>建库、建表、建立测试数据</h3><p><img src="https://www.wongcw.cn/static/img/cc1cd4ffce8dbacb52bb812e9fb1e8e8.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
 <p>点机开始之后，这里可以看到每个用户进程正在执行的事务</p>
@@ -375,7 +377,8 @@
 
 <h3 id="查看服务器主机性能"><a href="#查看服务器主机性能" class="headerlink" title="查看服务器主机性能"></a>查看服务器主机性能</h3><p>这里用了htop , 可以用其他工具</p>
 <p><img src="https://www.wongcw.cn/static/img/9a12fbe882debd107f30930eb16092d6.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="Run-a-Test-Workload"><a href="#Run-a-Test-Workload" class="headerlink" title="Run a Test Workload"></a><a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch02s02.html">Run a Test Workload</a></h2><h3 id="开启正儿八经压测"><a href="#开启正儿八经压测" class="headerlink" title="开启正儿八经压测"></a>开启正儿八经压测</h3><p><img src="https://www.wongcw.cn/static/img/a30451050547b1910b1b9097d7735b3a.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch02s02.html">Run a Test Workload</a></strong></p>
+<h3 id="开启正儿八经压测"><a href="#开启正儿八经压测" class="headerlink" title="开启正儿八经压测"></a>开启正儿八经压测</h3><p><img src="https://www.wongcw.cn/static/img/a30451050547b1910b1b9097d7735b3a.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
 <p>两个选项，分别对应直接跑完脚本，一个是跑固定时间结束，选完之后点击Load加载脚本，点击Run Virtual Users 图标开始测试，我的虚拟机性能不高，这个测试客户端已经卡的不行了，但服务器性资源占用倒不高。虚拟用户创建可以在Driver Script 下面的菜单新建。</p>
 <p><img src="https://www.wongcw.cn/static/img/6100988b30e823d6dd0bdf3a5ee8b412.clipboard-2022-09-19.png" srcset="/img/loading.gif" lazyload></p>
 <p>官网最新win版压测MySQL驱动会有些问题，据说是Tcl的版本与MySQL驱动依赖包版本不对应，需要更换MySQL驱动dll,  HammerDB-4.5\lib\mysqltcl3.052\libmysql.dll，报错界面忘记截图，具体下载位置自行百度。后来发现<a target="_blank" rel="noopener" href="https://www.hammerdb.com/docs/ch01s10.html#d0e628">HammerDB官方文档</a>已经写的很清楚了。</p>
@@ -413,6 +416,8 @@
       <i class="iconfont icon-tags"></i>
       
         <a href="/tags/MySQL/">#MySQL</a>
+      
+        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%8B%E6%B5%8B/">#数据库压测</a>
       
     </div>
   

@@ -1,0 +1,811 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="wangcw">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="使用Python脚本，将MySQL数据迁移至TDengine">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据迁移脚本案例">
+<meta property="og:url" content="https://blog.wongcw.cn/2022/09/30/%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%E8%84%9A%E6%9C%AC%E6%A1%88%E4%BE%8B/index.html">
+<meta property="og:site_name" content="blogwong">
+<meta property="og:description" content="使用Python脚本，将MySQL数据迁移至TDengine">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-30T00:26:11.000Z">
+<meta property="article:modified_time" content="2022-09-30T03:49:50.950Z">
+<meta property="article:author" content="wangcw">
+<meta property="article:tag" content="ETL">
+<meta property="article:tag" content="数据迁移">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>数据迁移脚本案例 - blogwong</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/css/toubudaziji.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.wongcw.cn","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"663d1a6ec35b55e9fe6afb524ef4adaf","google":"GTM-T9V396Z","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?663d1a6ec35b55e9fe6afb524ef4adaf";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'GTM-T9V396Z', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>blogwong</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="数据迁移脚本案例"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-30 08:26" pubdate>
+          2022年9月30日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          30 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据迁移脚本案例</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>使用Python脚本，将MySQL数据迁移至TDengine</p>
+<span id="more"></span>
+
+<p>项目背景：</p>
+<p>公司调研过程时序数据库，做技术储备。最开始调研TDengine2.4，随时间推进官方升级2.6，在2.6上做了数据迁移，一批手机上传上来的定位数据，使用DATAX，使用mysqlreader加淘思官方提供的tdenginewriter插件，做好字段对应关系，写入数据，按阿里DATAX效率，开3个管道速度也并不快，走内网平均迁移速递大概在5000条/秒；到最近，涛思升级TDengine为3.0版本，很多附属工具基本重构，支持了流式计算，增加了社区版的数据删除等功能，这次使用DATAX适配失败，可能是改的太多了，索性尝试先使用python脚本迁移下。</p>
+<p>说干就干，官方提供了<a target="_blank" rel="noopener" href="https://docs.taosdata.com/develop/insert-data/high-volume/">快速迁移方案</a>，但是数据源是虚拟出来的，并没有时间主键，而且拆分子表是按量拆分然后平均分配，索性直接放弃，但是里面的多线程写入还是要参考的。</p>
+<p>由于是python初学者，类和一些库函数使用还不是很熟，简简单单一把梭，一条流水从头撸到尾。迁移也是尝试了很多方法，遇到了很多问题这里逐一介绍。</p>
+<h2 id="TDengine连接建立"><a href="#TDengine连接建立" class="headerlink" title="TDengine连接建立"></a>TDengine连接建立</h2><p><a target="_blank" rel="noopener" href="https://docs.taosdata.com/develop/connect/">官方提供文档</a>，两种连接方式，原生客户端，restful方式。</p>
+<h3 id="taosc-本地客户端方式"><a href="#taosc-本地客户端方式" class="headerlink" title="taosc 本地客户端方式"></a>taosc 本地客户端方式</h3><h4 id="安装驱动"><a href="#安装驱动" class="headerlink" title="安装驱动"></a>安装驱动</h4><p>安装包见官网 <a target="_blank" rel="noopener" href="https://www.taosdata.com/assets-download/3.0/TDengine-client-3.0.1.4-Linux-x64.tar.gz">Linux</a>|<a target="_blank" rel="noopener" href="https://www.taosdata.com/assets-download/3.0/TDengine-client-3.0.1.1.4-Windows-x64.exe">Windows</a></p>
+<p>win安装，linux解压，执行 <code>chmod+x install_client.sh &amp;&amp; install_client.sh</code></p>
+<h4 id="配置客户端"><a href="#配置客户端" class="headerlink" title="配置客户端"></a>配置客户端</h4><blockquote>
+<p>前提是与服务端的6030端口，开启TCP和UDP的放行，<font color=red> 如果是集群服务端，所有FQDN都需要添加端口两个协议的放行</font></p>
+</blockquote>
+<ul>
+<li>修改cfg配置文件(win: C:\TDengine\cfg\taos.cfg  linux：/etc/taos/taos.cfg) 修改 firstEP 为TDengine服务端的FirstEP</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ruby"><span class="hljs-comment"># The end point of the first dnode in the cluster to be connected to when </span><br><span class="hljs-string">`taosd`</span> <span class="hljs-keyword">or</span> <span class="hljs-string">`taos`</span> is started<br>firstEp                   <span class="hljs-symbol">tdengine1:</span><span class="hljs-number">6030</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>修改host文件，添加FQDN解析映射</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">vim</span> /etc/hosts<br><span class="hljs-attribute">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.xxx tdengine1<br><span class="hljs-attribute">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.xxx tdengine2<br><span class="hljs-attribute">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.xxx tdengine3<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>验证连接</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ping</span> tdengine1<br><span class="hljs-attribute">ping</span> tdengine2<br><span class="hljs-attribute">ping</span> tdengine3<br><span class="hljs-attribute">telnet</span> tdengine1 <span class="hljs-number">6030</span><br><span class="hljs-attribute">telnet</span> tdengine2 <span class="hljs-number">6030</span><br><span class="hljs-attribute">telnet</span> tdengine3 <span class="hljs-number">6030</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>taosc验证</li>
+</ul>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crystal"><span class="hljs-variable">$ </span>taos -h tdengine1 -u root -p<br><br>taos &gt; show databases;<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="安装python库"><a href="#安装python库" class="headerlink" title="安装python库"></a>安装python库</h4><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake">pip uninstall taos taospy<br>pip <span class="hljs-keyword">install</span> taospy<br></code></pre></td></tr></table></figure>
+<p>此种安装方法最高版本2.4.x，使用<code>pip_search</code>查看最高2.5.1(2022.09.30)，还是使用git源直接安装靠谱：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">pip install git+https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/taosdata/</span>taos-connector-python.git<br></code></pre></td></tr></table></figure>
+<p>但是吧，github方式国内连接不畅，可以<a target="_blank" rel="noopener" href="https://github.com/taosdata/taos-connector-python/releases/download/v2.6.4/taospy-2.6.4-py3-none-any.whl">下载包</a>后来本地安装。</p>
+<blockquote>
+<p>注意：要求python版本3.8以上，非官方文档上的3.6以上。</p>
+</blockquote>
+<h4 id="测试连接"><a href="#测试连接" class="headerlink" title="测试连接"></a><a target="_blank" rel="noopener" href="https://github.com/taosdata/TDengine/blob/main/docs/examples/python/connect_example.py">测试连接</a></h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs routeros">import taos<br><br>def test_connection():<br>    # all parameters are optional.<br>    # <span class="hljs-keyword">if</span> database is specified,<br>    # then it must exist.<br>    conn = taos.connect(<span class="hljs-attribute">host</span>=<span class="hljs-string">&quot;localhost&quot;</span>,<br>                        <span class="hljs-attribute">port</span>=6030,<br>                        <span class="hljs-attribute">user</span>=<span class="hljs-string">&quot;root&quot;</span>,<br>                        <span class="hljs-attribute">password</span>=<span class="hljs-string">&quot;taosdata&quot;</span>,<br>                        <span class="hljs-attribute">database</span>=<span class="hljs-string">&quot;log&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;client info:&#x27;</span>, conn.client_info)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;server info:&#x27;</span>, conn.server_info)<br>    conn.close()<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    test_connection()<br></code></pre></td></tr></table></figure>
+
+<h3 id="restful-方式"><a href="#restful-方式" class="headerlink" title="restful 方式"></a>restful 方式</h3><p>万能连接大法，能发送GET、POST请求就行。</p>
+<blockquote>
+<p>与原生连接器的一个区别是，RESTful 接口是无状态的，因此 USE db_name 指令没有效果，所有<br>对表名、超级表名的引用都需要指定数据库名前缀。支持在 RESTful URL 中指定 db_name，这时<br>如果 SQL 语句中没有指定数据库名前缀的话，会使用 URL 中指定的这个 db_name。</p>
+</blockquote>
+<ul>
+<li>确认服务端开启 taosadapter</li>
+</ul>
+<p>firstEP服务端运行</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">systemctl status taosadapter</span><br></code></pre></td></tr></table></figure>
+
+<p>确保开放6041</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">lsof</span> -nP -iTCP -sTCP:LISTEN <br></code></pre></td></tr></table></figure>
+<ul>
+<li>测试连接</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">curl</span> -u root:password http://<span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.xxx:<span class="hljs-number">6041</span>/rest/sql -d <span class="hljs-string">&quot;select server_version()&quot;</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>HTTP 响应码<br>response code    说明<br>200    正确返回和 C 接口错误返回<br>400    参数错误返回<br>401    鉴权失败<br>404    接口不存在<br>500    内部错误<br>503    系统资源不足</p>
+</blockquote>
+<ul>
+<li><p>安装python包</p>
+<p>同上一章</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/taosdata/TDengine/blob/3.0/docs/examples/python/connect_rest_examples.py">测试连接</a></p>
+</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> taosrest import connect, TaosRestConnection, TaosRestCursor<br><br>conn: TaosRestConnection = connect(<span class="hljs-attribute">url</span>=<span class="hljs-string">&quot;http://localhost:6041&quot;</span>,<br>                                   <span class="hljs-attribute">user</span>=<span class="hljs-string">&quot;root&quot;</span>,<br>                                   <span class="hljs-attribute">password</span>=<span class="hljs-string">&quot;taosdata&quot;</span>,<br>                                   <span class="hljs-attribute">timeout</span>=30)<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="源数据batch"><a href="#源数据batch" class="headerlink" title="源数据batch"></a>源数据batch</h2><h3 id="拆分、循环方法"><a href="#拆分、循环方法" class="headerlink" title="拆分、循环方法"></a>拆分、循环方法</h3><p>因源数据有上亿级别数据，不可能一个<code>SELECT</code>撸到低，首先源表必须加上自增主键，或者带索引的可以作为分片键的字段(可以现加)，然后取个最大值，用for循环分批次去读取，如果数据处理模块、函数是要分多线程来取数据，需要有个全局变量记录不同线程之间取完数据后的增量值。</p>
+<h2 id="子表名称拼接"><a href="#子表名称拼接" class="headerlink" title="子表名称拼接"></a>子表名称拼接</h2><p>这里会考虑将源表代表设备、人等可分子表的关键键值，作为分组条件，取出各个唯一值，全量再去循环每个子表的固定batch，分批拼接<code>INSERT</code>语句后写入。这里结合上面的分批取源表数据，会有嵌套循环的场景，</p>
+<ul>
+<li>先从全量数据取出固定分组，然后循环每个分组内的Id做for循环，这里好处是可以保证子循环里Id可以连续，不会按自增来跑空；</li>
+<li>先取全量Id的连续值，在子循环里再找分组，这里好处是分组的压力对源库压力小，不至于直接给上亿条数据直接<code>GROUP BY </code>；</li>
+<li>还有一种是先取全量Id连续值，子循环里拆分组，这个分组之后，由于有设备、人等键的限制，Id是不连续的，那就再次来个for循环遍历分组内的结果，直接拼出来<code>INSERT</code>语句。</li>
+</ul>
+<p>这里各种循环，没得用函数，也没得分文件，最开始需求就是要迁移数据，有思路更清晰的应该能更好的给模块化下。</p>
+<h2 id="TDengine语句拼接"><a href="#TDengine语句拼接" class="headerlink" title="TDengine语句拼接"></a>TDengine语句拼接</h2><p>TDengine对标签数据和子表内数据写入，和正常的SQL标准内的还稍微有些区别，和其他时序类的应该很相似，这里在<a target="_blank" rel="noopener" href="https://docs.taosdata.com/taos-sql/insert/">官方文档</a>里有段</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">INSERT</span> INTO d21001 USING meters TAGS (&#x27;California.SanFrancisco&#x27;, <span class="hljs-number">2</span>) VALUES (&#x27;<span class="hljs-number">2021</span>-<span class="hljs-number">07</span>-<span class="hljs-number">13</span> <span class="hljs-number">14</span>:<span class="hljs-number">06</span>:<span class="hljs-number">34</span>.<span class="hljs-number">630</span>&#x27;, <span class="hljs-number">10</span>.<span class="hljs-number">2</span>, <span class="hljs-number">219</span>, <span class="hljs-number">0</span>.<span class="hljs-number">32</span>) (&#x27;<span class="hljs-number">2021</span>-<span class="hljs-number">07</span>-<span class="hljs-number">13</span> <span class="hljs-number">14</span>:<span class="hljs-number">06</span>:<span class="hljs-number">35</span>.<span class="hljs-number">779</span>&#x27;, <span class="hljs-number">10</span>.<span class="hljs-number">15</span>, <span class="hljs-number">217</span>, <span class="hljs-number">0</span>.<span class="hljs-number">33</span>)<br>            <span class="hljs-attribute">d21002</span> USING meters (groupId) TAGS (<span class="hljs-number">2</span>) VALUES (&#x27;<span class="hljs-number">2021</span>-<span class="hljs-number">07</span>-<span class="hljs-number">13</span> <span class="hljs-number">14</span>:<span class="hljs-number">06</span>:<span class="hljs-number">34</span>.<span class="hljs-number">255</span>&#x27;, <span class="hljs-number">10</span>.<span class="hljs-number">15</span>, <span class="hljs-number">217</span>, <span class="hljs-number">0</span>.<span class="hljs-number">33</span>)<br>            <span class="hljs-attribute">d21003</span> USING meters (groupId) TAGS (<span class="hljs-number">2</span>) (ts, current, phase) VALUES (&#x27;<span class="hljs-number">2021</span>-<span class="hljs-number">07</span>-<span class="hljs-number">13</span> <span class="hljs-number">14</span>:<span class="hljs-number">06</span>:<span class="hljs-number">34</span>.<span class="hljs-number">255</span>&#x27;, <span class="hljs-number">10</span>.<span class="hljs-number">27</span>, <span class="hljs-number">0</span>.<span class="hljs-number">31</span>);<br></code></pre></td></tr></table></figure>
+
+<p>需要拿出标签数据写在<code>INSERT</code>段里，然后<code>VALUES</code>值按行写在括号内。</p>
+<h2 id="简单日志"><a href="#简单日志" class="headerlink" title="简单日志"></a>简单日志</h2><p>上面讲到有实际已经到了三个循环，可以用全局变量累计每个子循环的时间、返回行数的累计，计算出平均迁移速度，返回给前台。</p>
+<h2 id="后台运行"><a href="#后台运行" class="headerlink" title="后台运行"></a>后台运行</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">nohup <span class="hljs-keyword">python3</span>.<span class="hljs-number">9</span> mysql2tdnative.<span class="hljs-keyword">py</span> &amp;<br></code></pre></td></tr></table></figure>
+
+<h2 id="实际脚本"><a href="#实际脚本" class="headerlink" title="实际脚本"></a>实际脚本</h2><p>放托管平台了</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/redgreat/mysql2td">GitHub</a></p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/rubygreat/mysql2td">Gitee</a></p>
+<p><a target="_blank" rel="noopener" href="https://codeberg.org/wangcw/mysql2td_codeberg">Codeberg</a></p>
+<p>本来想写一堆，写着写着忘词了~</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ETL%E5%B7%A5%E5%85%B7/" class="category-chain-item">ETL工具</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ETL/">#ETL</a>
+      
+        <a href="/tags/%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/">#数据迁移</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>数据迁移脚本案例</div>
+      <div>https://blog.wongcw.cn/2022/09/30/数据迁移脚本案例/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>wangcw</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月30日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'redgreat/redgreat.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <script>document.write("Copyright © wangcw 2020-" + new Date().getFullYear() + " All Rights Reserved") </script> <i class="iconfont icon-love"></i> <span id="timeDate"></span> <span id="times"></span> <script> var now = new Date(); function createtime() {  var grt= new Date("01/01/2022 00:00:00"); new Date().setTime(new Date().getTime()+250);  days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);  hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);  if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);  mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}  seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);  snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}  document.getElementById("timeDate").innerHTML = "本站已各种夹缝中安全运行 "+dnum+" 天 ";  document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; } setInterval("createtime()",250) </script> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022020665号
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/xiantiao.js"></script>
+<script src="/js/xiaoxuehua.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
