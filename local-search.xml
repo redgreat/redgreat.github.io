@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>GitHub清空提交记录</title>
+    <link href="/2022/10/19/GitHub%E6%B8%85%E7%A9%BA%E6%8F%90%E4%BA%A4%E8%AE%B0%E5%BD%95/"/>
+    <url>/2022/10/19/GitHub%E6%B8%85%E7%A9%BA%E6%8F%90%E4%BA%A4%E8%AE%B0%E5%BD%95/</url>
+    
+    <content type="html"><![CDATA[<p>各位在github上维护自己编写的代码工程仓库时，想必遇到过仓库内文件泄漏隐私信息、commits泄漏邮箱信息等敏感头疼问题，但是由于这些仓库收获了很多stars，不想删除后重建新仓库。为了解决这些问题，这里有两个办法：</p><p>方法一：强制回退法</p><ol><li><p>克隆仓库，但记住不可以加–depth=1这类选项；</p></li><li><p>使用 git log 命令查询要回滚的 commit_id；</p></li><li><p>查找最早一次提交到的commit_id；</p></li><li><p>备份原仓库目录下所有文件及文件夹(.git文件夹除外)；</p></li><li><p>强制还原，执行命令：git reset –hard commit_id，之后 HEAD 就会指向此次的提交记录；</p></li><li><p>删除仓库目录下所有文件和文件夹，去除你备份的文件中包含隐私信息的部分，并还原至原仓库目录下；</p></li><li><p>执行提交新commit前的常规操作：git add . 和 git commit -m “init:剔除敏感信息”； ## 自己更换备注</p></li><li><p>强制推送到github远程仓库：git push origin HEAD –force；</p></li><li><p>此时只剩下第一次提交和本次提交记录，基本达到清空目的：</p></li></ol><p>此方法速度比较快，但缺点很明显：第一次commit记录无法清除。</p><p> 方法二：分支替换法</p><ol><li><p>同方法一克隆仓库；</p></li><li><p>将当前分支指向一个空分支 latest_branch：git checkout –orphan latest_branch；</p></li><li><p>备份原仓库目录下所有文件及文件夹(.git文件夹除外)，之后清空该目录(.git文件夹除外)；</p></li><li><p>去除你备份的文件中包含隐私信息的部分，并还原至原仓库目录下，最后重新添加：git add -A；</p></li><li><p>提交更改：git commit -am “init:剔除敏感信息”； ## 自己更换备注</p></li><li><p>删除原分支：git branch -D master （新版的github默认分支是main了，请根据实际情况更改，下同）；</p></li><li><p>将现有临时分支切换到主分支：git branch -m master；</p></li><li><p>强制推送到远程：git push -f origin master –force</p></li></ol><p><a href="https://blog.csdn.net/u012783994/article/details/126339284">感谢作者</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>开源相关</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>GitHub</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>数据迁移脚本案例</title>
     <link href="/2022/09/30/%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%E8%84%9A%E6%9C%AC%E6%A1%88%E4%BE%8B/"/>
     <url>/2022/09/30/%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%E8%84%9A%E6%9C%AC%E6%A1%88%E4%BE%8B/</url>
